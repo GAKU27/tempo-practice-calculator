@@ -19,6 +19,12 @@
         <!-- Header -->
         <header class="header">
             <div class="header-content">
+                <!-- Theme Toggle -->
+                <div class="header-actions">
+                    <button type="button" id="theme-toggle" class="icon-btn" title="テーマ切り替え">
+                        <span class="theme-icon">☀️</span>
+                    </button>
+                </div>
                 <div class="logo">
                     <div class="logo-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -132,11 +138,17 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="calculate-btn">
-                        <span class="btn-icon">⏱️</span>
-                        計算する
-                        <span class="btn-shine"></span>
-                    </button>
+                    <div class="button-row">
+                        <button type="submit" class="calculate-btn">
+                            <span class="btn-icon">⏱️</span>
+                            計算する
+                            <span class="btn-shine"></span>
+                        </button>
+                        <button type="button" id="share-btn" class="share-btn">
+                            <span class="btn-icon">🔗</span>
+                            共有
+                        </button>
+                    </div>
                 </form>
             </section>
 
