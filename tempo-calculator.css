@@ -90,7 +90,7 @@ body {
     letter-spacing: 0.01em;
 }
 
-/* Background - Subtle gradient instead of orbs */
+/* Background - Very simple */
 .background-animation {
     position: fixed;
     top: 0;
@@ -99,10 +99,7 @@ body {
     height: 100%;
     pointer-events: none;
     z-index: -1;
-    background:
-        radial-gradient(ellipse at 20% 20%, rgba(124, 139, 184, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 80%, rgba(154, 124, 184, 0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 50%, rgba(124, 184, 139, 0.04) 0%, transparent 60%);
+    background: linear-gradient(180deg, #1a1a22 0%, #16161e 100%);
 }
 
 /* Hide orbs (replaced with static gradient) */
