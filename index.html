@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tempo Practice Calculator | テンポ練習時間計算機</title>
+    <meta name="description" content="段階的テンポ上昇トレーニングの総所要時間を高精度に算出するツール">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="tempo-calculator.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                    </div>
+                    <h1 class="logo-text">Tempo Practice Calculator</h1>
+                </div>
+                <p class="tagline">段階的テンポ上昇トレーニング時間計算機</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Input Section -->
+            <section class="input-section glass-card">
+                <h2 class="section-title">
+                    <span class="title-icon">⚙️</span>
+                    練習パラメータ設定
+                </h2>
+
+                <form id="calculator-form" class="form-grid">
+                    <!-- Tempo Settings -->
+                    <div class="form-group-container">
+                        <h3 class="group-title">テンポ設定</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startTempo">
+                                    開始テンポ
+                                    <span class="unit">(BPM)</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="startTempo" name="startTempo" value="60" min="20" max="300"
+                                        step="1" required>
+                                    <span class="input-icon">🎵</span>
+                                </div>
+                                <span class="hint">a: 練習開始時の速度</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="endTempo">
+                                    目標テンポ
+                                    <span class="unit">(BPM)</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="endTempo" name="endTempo" value="120" min="20" max="400"
+                                        step="1" required>
+                                    <span class="input-icon">🎯</span>
+                                </div>
+                                <span class="hint">b: 最終到達テンポ</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="stepSize">
+                                    ステップ幅
+                                    <span class="unit">(BPM)</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="stepSize" name="stepSize" value="4" min="1" max="50"
+                                        step="1" required>
+                                    <span class="input-icon">📈</span>
+                                </div>
+                                <span class="hint">s: 1回の加速量</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Practice Structure -->
+                    <div class="form-group-container">
+                        <h3 class="group-title">練習構造</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="beatsPerPhrase">
+                                    フレーズ拍数
+                                    <span class="unit">(拍)</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="beatsPerPhrase" name="beatsPerPhrase" value="4" min="1"
+                                        max="64" step="1" required>
+                                    <span class="input-icon">🎼</span>
+                                </div>
+                                <span class="hint">B: 1フレーズの長さ</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="repetitions">
+                                    反復回数
+                                    <span class="unit">(回)</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="repetitions" name="repetitions" value="4" min="1" max="100"
+                                        step="1" required>
+                                    <span class="input-icon">🔄</span>
+                                </div>
+                                <span class="hint">R: 各テンポでの繰り返し</span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="sets">
+                                    セット数
+                                    <span class="unit">(セット)</span>
+                                </label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="sets" name="sets" value="1" min="1" max="20" step="1"
+                                        required>
+                                    <span class="input-icon">📦</span>
+                                </div>
+                                <span class="hint">N: 全体の反復回数</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="calculate-btn">
+                        <span class="btn-icon">⏱️</span>
+                        計算する
+                        <span class="btn-shine"></span>
+                    </button>
+                </form>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results-section" class="results-section glass-card hidden">
+                <h2 class="section-title">
+                    <span class="title-icon">📊</span>
+                    計算結果
+                </h2>
+
+                <!-- Summary Cards -->
+                <div class="result-cards">
+                    <div class="result-card primary">
+                        <div class="card-header">
+                            <span class="card-icon">⏱️</span>
+                            <span class="card-label">総所要時間</span>
+                        </div>
+                        <div class="card-value" id="totalTime">--:--</div>
+                        <div class="card-sub" id="totalTimeSeconds">-- 秒</div>
+                    </div>
+
+                    <div class="result-card secondary">
+                        <div class="card-header">
+                            <span class="card-icon">📐</span>
+                            <span class="card-label">ステップ数</span>
+                        </div>
+                        <div class="card-value" id="stepCount">--</div>
+                        <div class="card-sub">回のテンポ変更</div>
+                    </div>
+
+                    <div class="result-card tertiary">
+                        <div class="card-header">
+                            <span class="card-icon">🎯</span>
+                            <span class="card-label">実際の終了テンポ</span>
+                        </div>
+                        <div class="card-value" id="actualEndTempo">--</div>
+                        <div class="card-sub">BPM</div>
+                    </div>
+                </div>
+
+                <!-- Calculation Details -->
+                <div class="calculation-details">
+                    <h3 class="details-title">計算詳細</h3>
+
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">厳密解（ループ計算）</span>
+                            <span class="detail-value" id="exactTime">-- 秒</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">近似解（S-P公式）</span>
+                            <span class="detail-value" id="approxTime">-- 秒</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">近似誤差率</span>
+                            <span class="detail-value" id="errorRate">--%</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">1ステップ総拍数 (K)</span>
+                            <span class="detail-value" id="totalBeatsPerStep">-- 拍</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formula Display -->
+                <div class="formula-display">
+                    <h3 class="formula-title">使用した数式</h3>
+                    <div class="formula-box">
+                        <p class="formula">T<sub>total</sub> = N × Σ<sub>k=0</sub><sup>n</sup> (60 × B × R) / (a + s ×
+                            k)</p>
+                        <p class="formula-description">
+                            総所要時間 = セット数 × 各ステップの時間の総和
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Info Section -->
+            <section class="info-section glass-card">
+                <h2 class="section-title">
+                    <span class="title-icon">📖</span>
+                    使い方
+                </h2>
+                <div class="info-content">
+                    <div class="info-item">
+                        <div class="info-number">1</div>
+                        <div class="info-text">
+                            <strong>テンポ設定</strong>で開始テンポ・終了テンポ・ステップ幅を入力
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-number">2</div>
+                        <div class="info-text">
+                            <strong>練習構造</strong>でフレーズ拍数・反復回数・セット数を設定
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-number">3</div>
+                        <div class="info-text">
+                            <strong>計算する</strong>ボタンで総所要時間を算出
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <span class="tip-icon">💡</span>
+                    <p>
+                        <strong>ヒント:</strong> 低速域では時間が長くなります。
+                        テンポと時間は<strong>反比例</strong>の関係（t ∝ 1/v）にあるため、
+                        直感より実際は長くかかることがほとんどです。
+                    </p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="attribution">
+                段階的テンポ上昇トレーニング時間計算機 |
+                数理モデル: 拡張有理S-P公式
+            </p>
+        </footer>
+    </div>
+
+    <!-- Background Animation -->
+    <div class="background-animation">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <script src="tempo-calculator.js"></script>
+</body>
+
+</html>
