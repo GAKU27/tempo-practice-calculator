@@ -22,9 +22,6 @@
     const errorRateDisplay = document.getElementById('errorRate');
     const totalBeatsPerStepDisplay = document.getElementById('totalBeatsPerStep');
 
-    // Theme toggle element
-    const themeToggle = document.getElementById('theme-toggle');
-
     /**
      * 高精度総和計算（Kahan Summationアルゴリズム）
      */
@@ -147,12 +144,12 @@
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
         errorDiv.style.cssText = `
-            background: var(--color-error-bg);
-            border: 1px solid var(--color-error-border);
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 0.75rem;
             padding: 1rem;
             margin-bottom: 1rem;
-            color: var(--color-error-text);
+            color: #fca5a5;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -168,43 +165,6 @@
             errorDiv.style.transition = 'all 0.3s ease';
             setTimeout(() => errorDiv.remove(), 300);
         }, 3000);
-    }
-
-    /**
-     * 成功トースト表示
-     */
-    function showToast(message) {
-        const existingToast = document.querySelector('.toast-message');
-        if (existingToast) {
-            existingToast.remove();
-        }
-
-        const toast = document.createElement('div');
-        toast.className = 'toast-message';
-        toast.style.cssText = `
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--color-primary);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        `;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(-50%) translateY(10px)';
-            toast.style.transition = 'all 0.3s ease';
-            setTimeout(() => toast.remove(), 300);
-        }, 2000);
     }
 
     /**
@@ -246,7 +206,7 @@
                 let value = parseFloat(this.value);
 
                 if (value < min || value > max) {
-                    this.style.borderColor = 'var(--color-error-border)';
+                    this.style.borderColor = 'rgba(239, 68, 68, 0.5)';
                 } else {
                     this.style.borderColor = '';
                 }
@@ -270,153 +230,13 @@
         });
     }
 
-    // ========================================
-    // URL共有機能
-    // ========================================
-
-    /**
-     * URLからパラメータを読み込んでフォームに設定
-     */
-    function loadParamsFromURL() {
-        const urlParams = new URLSearchParams(window.location.search);
-
-        const paramMapping = {
-            'a': 'startTempo',
-            'b': 'endTempo',
-            's': 'stepSize',
-            'B': 'beatsPerPhrase',
-            'R': 'repetitions',
-            'N': 'sets'
-        };
-
-        let hasParams = false;
-
-        for (const [urlKey, inputName] of Object.entries(paramMapping)) {
-            const value = urlParams.get(urlKey);
-            if (value !== null) {
-                const input = document.querySelector(`[name="${inputName}"]`);
-                if (input) {
-                    input.value = value;
-                    hasParams = true;
-                }
-            }
-        }
-
-        // パラメータがある場合は自動計算
-        if (hasParams) {
-            setTimeout(() => {
-                form.dispatchEvent(new Event('submit'));
-            }, 100);
-        }
-    }
-
-    /**
-     * 現在の設定をURL共有用に生成
-     */
-    function generateShareURL() {
-        const formData = new FormData(form);
-        const params = new URLSearchParams();
-
-        params.set('a', formData.get('startTempo'));
-        params.set('b', formData.get('endTempo'));
-        params.set('s', formData.get('stepSize'));
-        params.set('B', formData.get('beatsPerPhrase'));
-        params.set('R', formData.get('repetitions'));
-        params.set('N', formData.get('sets'));
-
-        const baseURL = window.location.origin + window.location.pathname;
-        return `${baseURL}?${params.toString()}`;
-    }
-
-    /**
-     * 共有ボタンのクリックハンドラ
-     */
-    function handleShare() {
-        const shareURL = generateShareURL();
-
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(shareURL).then(() => {
-                showToast('📋 URLをコピーしました！');
-            }).catch(() => {
-                prompt('以下のURLをコピーしてください:', shareURL);
-            });
-        } else {
-            prompt('以下のURLをコピーしてください:', shareURL);
-        }
-    }
-
-    // ========================================
-    // ダークモード切り替え機能
-    // ========================================
-
-    /**
-     * テーマを切り替え
-     */
-    function toggleTheme() {
-        const html = document.documentElement;
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-
-        html.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-
-        updateThemeIcon(newTheme);
-    }
-
-    /**
-     * テーマアイコンを更新
-     */
-    function updateThemeIcon(theme) {
-        if (!themeToggle) return;
-
-        const icon = themeToggle.querySelector('.theme-icon');
-        if (icon) {
-            icon.textContent = theme === 'light' ? '🌙' : '☀️';
-        }
-    }
-
-    /**
-     * 保存されたテーマを読み込み
-     */
-    function loadSavedTheme() {
-        const savedTheme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = savedTheme || (prefersDark ? 'dark' : 'dark');
-
-        document.documentElement.setAttribute('data-theme', theme);
-        updateThemeIcon(theme);
-    }
-
     /**
      * 初期化
      */
     function init() {
-        // フォーム送信イベント
         form.addEventListener('submit', handleSubmit);
-
-        // 入力検証の設定
         setupValidation();
-
-        // キーボードショートカットの設定
         setupKeyboardShortcuts();
-
-        // URLからパラメータを読み込み
-        loadParamsFromURL();
-
-        // テーマの初期化
-        loadSavedTheme();
-
-        // テーマ切り替えボタン
-        if (themeToggle) {
-            themeToggle.addEventListener('click', toggleTheme);
-        }
-
-        // 共有ボタン
-        const shareBtn = document.getElementById('share-btn');
-        if (shareBtn) {
-            shareBtn.addEventListener('click', handleShare);
-        }
-
         console.log('Tempo Practice Calculator initialized');
     }
 
