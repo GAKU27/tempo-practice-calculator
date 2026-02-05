@@ -26,7 +26,7 @@
     --color-text-muted: #9a9eb0;
 
     /* Gradients - Subtle and calm */
-    --gradient-primary: linear-gradient(135deg, #8b9dc3 0%, #a38bb8 100%);
+    --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
 
     /* Spacing */
     --space-xs: 0.25rem;
