@@ -13,17 +13,17 @@
     --color-tertiary: #8bc3a8;
     --color-accent: #d4b896;
 
-    /* Background - Calm dark blue-gray */
-    --color-bg-dark: #1e2430;
-    --color-bg-card: rgba(255, 255, 255, 0.06);
-    --color-bg-card-hover: rgba(255, 255, 255, 0.09);
-    --color-border: rgba(255, 255, 255, 0.12);
-    --color-border-light: rgba(255, 255, 255, 0.18);
+    /* Background - Brighter blue-gray */
+    --color-bg-dark: #2a3242;
+    --color-bg-card: rgba(255, 255, 255, 0.08);
+    --color-bg-card-hover: rgba(255, 255, 255, 0.12);
+    --color-border: rgba(255, 255, 255, 0.15);
+    --color-border-light: rgba(255, 255, 255, 0.22);
 
     /* Text - Good contrast */
-    --color-text-primary: #f0f2f5;
-    --color-text-secondary: #b8bcc8;
-    --color-text-muted: #8a8e9a;
+    --color-text-primary: #f5f6f8;
+    --color-text-secondary: #c5c9d5;
+    --color-text-muted: #9a9eb0;
 
     /* Gradients - Subtle and calm */
     --gradient-primary: linear-gradient(135deg, #8b9dc3 0%, #a38bb8 100%);
@@ -97,7 +97,7 @@ body {
     height: 100%;
     pointer-events: none;
     z-index: -1;
-    background: linear-gradient(160deg, #1e2430 0%, #252d3a 50%, #1e2430 100%);
+    background: linear-gradient(160deg, #2a3242 0%, #323c4d 50%, #2a3242 100%);
 }
 
 /* Geometric background SVG */
