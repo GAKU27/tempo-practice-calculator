@@ -22,49 +22,64 @@
             this.audioContext = null;
             this.isPlaying = false;
             this.currentBeatInBar = 0;
+            this.currentSubdivision = 0;
             this.beatsPerBar = 4;
+            this.subdivision = 1; // 1=quarter, 2=eighth, 3=triplet, 4=sixteenth
             this.tempo = 120;
             this.lookahead = 25.0; // ms
             this.scheduleAheadTime = 0.1; // seconds
             this.nextNoteTime = 0.0;
             this.timerID = null;
             this.soundType = 'click'; // click, wood, beep
+            this.pendulumEnabled = true;
+            this.pendulumDirection = 'left';
+            this.pendulumArm = null;
         }
 
         nextNote() {
-            const secondsPerBeat = 60.0 / this.tempo;
-            this.nextNoteTime += secondsPerBeat;
+            // Calculate time based on subdivision
+            const baseSecondsPerBeat = 60.0 / this.tempo;
+            const secondsPerNote = baseSecondsPerBeat / this.subdivision;
+            this.nextNoteTime += secondsPerNote;
 
-            this.currentBeatInBar++;
-            if (this.currentBeatInBar >= this.beatsPerBar) {
-                this.currentBeatInBar = 0;
+            this.currentSubdivision++;
+            if (this.currentSubdivision >= this.subdivision) {
+                this.currentSubdivision = 0;
+                this.currentBeatInBar++;
+                if (this.currentBeatInBar >= this.beatsPerBar) {
+                    this.currentBeatInBar = 0;
+                }
             }
         }
 
-        scheduleNote(beatNumber, time) {
+        scheduleNote(beatNumber, subdivisionNumber, time) {
             // Visual feedback
+            const isMainBeat = subdivisionNumber === 0;
+            const isAccent = beatNumber === 0 && this.beatsPerBar > 0 && isMainBeat;
+
             requestAnimationFrame(() => {
                 const drawTime = (time - this.audioContext.currentTime) * 1000;
                 setTimeout(() => {
-                    this.triggerVisual(beatNumber);
+                    this.triggerVisual(beatNumber, isMainBeat);
+                    if (isMainBeat) {
+                        this.triggerPendulum();
+                    }
                 }, Math.max(0, drawTime));
             });
 
-            // Audio based on sound type
-            const isAccent = beatNumber === 0 && this.beatsPerBar > 0;
-
+            // Subdivision sounds: main beat is louder, sub-beats are softer
             switch (this.soundType) {
                 case 'click':
-                    this.playClickSound(time, isAccent);
+                    this.playClickSound(time, isAccent, isMainBeat);
                     break;
                 case 'wood':
-                    this.playWoodSound(time, isAccent);
+                    this.playWoodSound(time, isAccent, isMainBeat);
                     break;
                 case 'beep':
-                    this.playBeepSound(time, isAccent);
+                    this.playBeepSound(time, isAccent, isMainBeat);
                     break;
                 default:
-                    this.playClickSound(time, isAccent);
+                    this.playClickSound(time, isAccent, isMainBeat);
             }
         }
 
@@ -142,7 +157,7 @@
 
         scheduler() {
             while (this.nextNoteTime < this.audioContext.currentTime + this.scheduleAheadTime) {
-                this.scheduleNote(this.currentBeatInBar, this.nextNoteTime);
+                this.scheduleNote(this.currentBeatInBar, this.currentSubdivision, this.nextNoteTime);
                 this.nextNote();
             }
             this.timerID = setTimeout(() => this.scheduler(), this.lookahead);
@@ -178,8 +193,23 @@
             this.soundType = type;
         }
 
-        triggerVisual(beatNumber) {
-            const isAccent = beatNumber === 0 && this.beatsPerBar > 0;
+        setSubdivision(value) {
+            this.subdivision = value;
+        }
+
+        setPendulumEnabled(enabled) {
+            this.pendulumEnabled = enabled;
+        }
+
+        setPendulumArm(element) {
+            this.pendulumArm = element;
+        }
+
+        triggerVisual(beatNumber, isMainBeat) {
+            const visualCircle = document.getElementById('visual-circle');
+            if (!visualCircle) return;
+
+            const isAccent = beatNumber === 0 && this.beatsPerBar > 0 && isMainBeat;
             visualCircle.className = 'visual-circle'; // reset
 
             // Force reflow
@@ -187,13 +217,33 @@
 
             if (isAccent) {
                 visualCircle.classList.add('accent');
-            } else {
+            } else if (isMainBeat) {
                 visualCircle.classList.add('beat');
+            } else {
+                visualCircle.classList.add('sub-beat');
             }
 
             setTimeout(() => {
-                visualCircle.classList.remove('beat', 'accent');
+                visualCircle.classList.remove('beat', 'accent', 'sub-beat');
             }, 100);
+        }
+
+        triggerPendulum() {
+            if (!this.pendulumEnabled || !this.pendulumArm) return;
+
+            // Toggle pendulum direction
+            this.pendulumArm.classList.remove('swinging-left', 'swinging-right');
+
+            // Force reflow
+            void this.pendulumArm.offsetWidth;
+
+            if (this.pendulumDirection === 'left') {
+                this.pendulumArm.classList.add('swinging-right');
+                this.pendulumDirection = 'right';
+            } else {
+                this.pendulumArm.classList.add('swinging-left');
+                this.pendulumDirection = 'left';
+            }
         }
     }
 
@@ -321,16 +371,47 @@
             }
         });
 
-        // Time Signature
+        // Time Signature (now with format "beats-noteValue")
         timeSignatureSelect.addEventListener('change', (e) => {
-            metronome.setBeatsPerBar(parseInt(e.target.value));
+            const value = e.target.value;
+            if (value === '0') {
+                metronome.setBeatsPerBar(0);
+            } else {
+                const [beats] = value.split('-').map(Number);
+                metronome.setBeatsPerBar(beats);
+            }
         });
+
+        // Subdivision (note value)
+        const subdivisionSelect = document.getElementById('subdivision-select');
+        if (subdivisionSelect) {
+            subdivisionSelect.addEventListener('change', (e) => {
+                metronome.setSubdivision(parseInt(e.target.value));
+            });
+        }
 
         // Sound Type
         const soundTypeSelect = document.getElementById('sound-type-select');
         if (soundTypeSelect) {
             soundTypeSelect.addEventListener('change', (e) => {
                 metronome.setSoundType(e.target.value);
+            });
+        }
+
+        // Pendulum toggle
+        const pendulumSelect = document.getElementById('pendulum-select');
+        const pendulumContainer = document.querySelector('.pendulum-container');
+        const pendulumArm = document.getElementById('pendulum-arm');
+
+        if (pendulumArm) {
+            metronome.setPendulumArm(pendulumArm);
+        }
+
+        if (pendulumSelect && pendulumContainer) {
+            pendulumSelect.addEventListener('change', (e) => {
+                const enabled = e.target.value === 'on';
+                metronome.setPendulumEnabled(enabled);
+                pendulumContainer.classList.toggle('hidden', !enabled);
             });
         }
 

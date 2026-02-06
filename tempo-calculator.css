@@ -1046,3 +1046,75 @@ body {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
 }
+
+/* Pendulum Styles */
+.pendulum-container {
+    position: relative;
+    width: 120px;
+    height: 140px;
+    margin: var(--space-lg) auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pendulum-container.hidden {
+    display: none;
+}
+
+.pendulum-arm {
+    position: absolute;
+    top: 0;
+    width: 3px;
+    height: 100px;
+    background: linear-gradient(to bottom, var(--color-primary), var(--color-secondary));
+    transform-origin: top center;
+    border-radius: 2px;
+    transition: transform 0.1s ease-out;
+}
+
+.pendulum-weight {
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 24px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    box-shadow:
+        0 0 15px rgba(139, 92, 246, 0.5),
+        0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.pendulum-base {
+    position: absolute;
+    top: -6px;
+    width: 16px;
+    height: 16px;
+    background: var(--color-bg-card);
+    border: 2px solid var(--color-border-light);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+/* Pendulum Animation */
+.pendulum-arm.swinging-left {
+    transform: rotate(-30deg);
+}
+
+.pendulum-arm.swinging-right {
+    transform: rotate(30deg);
+}
+
+@keyframes pendulum-swing {
+
+    0%,
+    100% {
+        transform: rotate(-30deg);
+    }
+
+    50% {
+        transform: rotate(30deg);
+    }
+}
