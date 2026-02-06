@@ -1363,14 +1363,14 @@ body {
 }
 
 [data-theme="light"] .header {
-    background: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    background: transparent;
+    border: none;
+    box-shadow: none;
 }
 
 [data-theme="light"] .footer {
-    background: #ffffff;
-    border-top: 1px solid #e5e7eb;
+    background: transparent;
+    border: none;
 }
 
 [data-theme="light"] .nav-menu {
