@@ -767,6 +767,20 @@ body {
     top: 0;
 }
 
+/* View Section (Page Switching) */
+.view-section {
+    display: none;
+}
+
+.view-section.active {
+    display: block;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
 /* Metronome Styles */
 .metronome-app {
     display: flex;
