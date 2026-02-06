@@ -321,63 +321,89 @@
                         <!-- Pendulum -->
                         <div class="pendulum-container">
                             <div class="pendulum-arm" id="pendulum-arm">
-                                <div class="pendulum-weight"></div>
+                                <div class="pendulum-weight" id="pendulum-weight"></div>
                             </div>
                             <div class="pendulum-base"></div>
                         </div>
 
-                        <!-- Settings -->
-                        <div class="metronome-settings">
-                            <div class="setting-row">
-                                <div class="setting-item">
-                                    <label>拍子</label>
-                                    <select id="time-signature-select" class="setting-select">
-                                        <optgroup label="4分音符系">
-                                            <option value="1-4">1 / 4</option>
-                                            <option value="2-4">2 / 4</option>
-                                            <option value="3-4">3 / 4</option>
-                                            <option value="4-4" selected>4 / 4</option>
-                                            <option value="5-4">5 / 4</option>
-                                            <option value="6-4">6 / 4</option>
-                                        </optgroup>
-                                        <optgroup label="8分音符系">
-                                            <option value="3-8">3 / 8</option>
-                                            <option value="5-8">5 / 8</option>
-                                            <option value="6-8">6 / 8</option>
-                                            <option value="7-8">7 / 8</option>
-                                            <option value="9-8">9 / 8</option>
-                                            <option value="12-8">12 / 8</option>
-                                        </optgroup>
-                                        <optgroup label="その他">
-                                            <option value="0">なし（アクセントなし）</option>
-                                        </optgroup>
-                                    </select>
-                                </div>
-                                <div class="setting-item">
-                                    <label>音符</label>
-                                    <select id="subdivision-select" class="setting-select">
-                                        <option value="1">♩ 4分音符</option>
-                                        <option value="2">♪ 8分音符</option>
-                                        <option value="3">♪3 3連符</option>
-                                        <option value="4">♬ 16分音符</option>
-                                    </select>
-                                </div>
+                        <!-- Quick Settings (常時表示) -->
+                        <div class="quick-settings">
+                            <div class="setting-item">
+                                <label>拍子</label>
+                                <select id="time-signature-select" class="setting-select">
+                                    <optgroup label="4分音符系">
+                                        <option value="1-4">1 / 4</option>
+                                        <option value="2-4">2 / 4</option>
+                                        <option value="3-4">3 / 4</option>
+                                        <option value="4-4" selected>4 / 4</option>
+                                        <option value="5-4">5 / 4</option>
+                                        <option value="6-4">6 / 4</option>
+                                    </optgroup>
+                                    <optgroup label="8分音符系">
+                                        <option value="3-8">3 / 8</option>
+                                        <option value="5-8">5 / 8</option>
+                                        <option value="6-8">6 / 8</option>
+                                        <option value="7-8">7 / 8</option>
+                                        <option value="9-8">9 / 8</option>
+                                        <option value="12-8">12 / 8</option>
+                                    </optgroup>
+                                    <optgroup label="その他">
+                                        <option value="0">なし（アクセントなし）</option>
+                                    </optgroup>
+                                </select>
                             </div>
-                            <div class="setting-row">
-                                <div class="setting-item">
-                                    <label>音色</label>
-                                    <select id="sound-type-select" class="setting-select">
-                                        <option value="click">クリック</option>
-                                        <option value="wood">ウッドブロック</option>
-                                        <option value="beep">ビープ</option>
-                                    </select>
+                            <div class="setting-item">
+                                <label>音符</label>
+                                <select id="subdivision-select" class="setting-select">
+                                    <option value="1">♩ 4分</option>
+                                    <option value="2">♪ 8分</option>
+                                    <option value="3">𝅗𝅥³ 3連</option>
+                                    <option value="4">♬ 16分</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Settings Button -->
+                        <button type="button" id="settings-toggle-btn" class="settings-toggle-btn">
+                            <span class="settings-icon">⚙</span>
+                            <span>詳細設定</span>
+                        </button>
+
+                        <!-- Settings Panel (折りたたみ) -->
+                        <div id="settings-panel" class="settings-panel hidden">
+                            <div class="settings-panel-header">
+                                <h3>詳細設定</h3>
+                                <button type="button" id="close-settings-btn" class="close-settings-btn">×</button>
+                            </div>
+                            <div class="settings-panel-content">
+                                <div class="setting-group">
+                                    <h4>サウンド</h4>
+                                    <div class="setting-item">
+                                        <label>音色</label>
+                                        <select id="sound-type-select" class="setting-select">
+                                            <option value="click">クリック</option>
+                                            <option value="wood">ウッドブロック</option>
+                                            <option value="beep">ビープ</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="setting-item">
-                                    <label>振り子</label>
-                                    <select id="pendulum-select" class="setting-select">
-                                        <option value="on">表示</option>
-                                        <option value="off">非表示</option>
-                                    </select>
+                                <div class="setting-group">
+                                    <h4>振り子</h4>
+                                    <div class="setting-item">
+                                        <label>表示</label>
+                                        <select id="pendulum-select" class="setting-select">
+                                            <option value="on">表示</option>
+                                            <option value="off">非表示</option>
+                                        </select>
+                                    </div>
+                                    <div class="setting-item">
+                                        <label>玉の色</label>
+                                        <div class="color-picker-row">
+                                            <input type="color" id="pendulum-color" value="#8b5cf6"
+                                                class="color-picker">
+                                            <span id="pendulum-color-label" class="color-label">#8b5cf6</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

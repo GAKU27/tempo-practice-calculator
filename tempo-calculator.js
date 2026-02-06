@@ -402,6 +402,7 @@
         const pendulumSelect = document.getElementById('pendulum-select');
         const pendulumContainer = document.querySelector('.pendulum-container');
         const pendulumArm = document.getElementById('pendulum-arm');
+        const pendulumWeight = document.getElementById('pendulum-weight');
 
         if (pendulumArm) {
             metronome.setPendulumArm(pendulumArm);
@@ -412,6 +413,38 @@
                 const enabled = e.target.value === 'on';
                 metronome.setPendulumEnabled(enabled);
                 pendulumContainer.classList.toggle('hidden', !enabled);
+            });
+        }
+
+        // Pendulum color
+        const pendulumColorPicker = document.getElementById('pendulum-color');
+        const pendulumColorLabel = document.getElementById('pendulum-color-label');
+
+        if (pendulumColorPicker && pendulumWeight) {
+            pendulumColorPicker.addEventListener('input', (e) => {
+                const color = e.target.value;
+                pendulumWeight.style.background = color;
+                pendulumWeight.style.boxShadow = `0 0 15px ${color}80, 0 4px 8px rgba(0, 0, 0, 0.3)`;
+                if (pendulumColorLabel) {
+                    pendulumColorLabel.textContent = color;
+                }
+            });
+        }
+
+        // Settings Panel toggle
+        const settingsToggleBtn = document.getElementById('settings-toggle-btn');
+        const settingsPanel = document.getElementById('settings-panel');
+        const closeSettingsBtn = document.getElementById('close-settings-btn');
+
+        if (settingsToggleBtn && settingsPanel) {
+            settingsToggleBtn.addEventListener('click', () => {
+                settingsPanel.classList.toggle('hidden');
+            });
+        }
+
+        if (closeSettingsBtn && settingsPanel) {
+            closeSettingsBtn.addEventListener('click', () => {
+                settingsPanel.classList.add('hidden');
             });
         }
 
