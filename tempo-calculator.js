@@ -86,34 +86,40 @@
             osc.stop(time + 0.03);
         }
 
-        // ウッドブロック風（ノイズ + フィルタ）
+        // ウッドブロック風（高周波 + 急速減衰）
         playWoodSound(time, isAccent) {
-            const bufferSize = Math.floor(this.audioContext.sampleRate * 0.02);
-            const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
-            const data = buffer.getChannelData(0);
-
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
-            }
-
-            const noise = this.audioContext.createBufferSource();
-            noise.buffer = buffer;
-
-            const filter = this.audioContext.createBiquadFilter();
-            filter.type = 'bandpass';
-            filter.frequency.value = isAccent ? 1200 : 800;
-            filter.Q.value = 20;
-
+            // メイン音（三角波で木の響き）
+            const osc = this.audioContext.createOscillator();
             const envelope = this.audioContext.createGain();
-            envelope.gain.setValueAtTime(isAccent ? 0.8 : 0.6, time);
-            envelope.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
 
-            noise.connect(filter);
-            filter.connect(envelope);
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(isAccent ? 1500 : 1200, time);
+            osc.frequency.exponentialRampToValueAtTime(isAccent ? 600 : 400, time + 0.015);
+
+            envelope.gain.setValueAtTime(isAccent ? 0.6 : 0.4, time);
+            envelope.gain.exponentialRampToValueAtTime(0.001, time + 0.04);
+
+            osc.connect(envelope);
             envelope.connect(this.audioContext.destination);
 
-            noise.start(time);
-            noise.stop(time + 0.05);
+            osc.start(time);
+            osc.stop(time + 0.05);
+
+            // アタック音（短いクリック）
+            const click = this.audioContext.createOscillator();
+            const clickEnv = this.audioContext.createGain();
+
+            click.type = 'square';
+            click.frequency.value = isAccent ? 2000 : 1600;
+
+            clickEnv.gain.setValueAtTime(isAccent ? 0.3 : 0.2, time);
+            clickEnv.gain.exponentialRampToValueAtTime(0.001, time + 0.01);
+
+            click.connect(clickEnv);
+            clickEnv.connect(this.audioContext.destination);
+
+            click.start(time);
+            click.stop(time + 0.02);
         }
 
         // ビープ音（サイン波）
