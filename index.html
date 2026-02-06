@@ -26,8 +26,9 @@
         <!-- Header -->
         <header class="header">
             <div class="header-content">
-                <button type="button" id="menu-btn" class="icon-btn" title="メニュー">
-                    <span class="menu-icon">≡</span>
+                <button type="button" id="menu-btn" class="icon-btn" title="メニュー" aria-label="メニューを開く"
+                    aria-expanded="false" aria-controls="nav-menu">
+                    <span class="menu-icon" aria-hidden="true">≡</span>
                 </button>
                 <div class="logo">
                     <div class="logo-icon">
@@ -44,7 +45,7 @@
 
         <!-- Navigation Menu (Side Drawer) -->
         <div id="nav-overlay" class="nav-overlay"></div>
-        <nav id="nav-menu" class="nav-menu">
+        <nav id="nav-menu" class="nav-menu" role="navigation" aria-label="メインナビゲーション">
             <div class="nav-header">
                 <h2>Menu</h2>
                 <button type="button" id="close-menu-btn" class="icon-btn">×</button>
@@ -69,7 +70,7 @@
         </nav>
 
         <!-- Main Content Area -->
-        <main class="main-content">
+        <main class="main-content" role="main">
             <!-- Calculator View -->
             <div id="calculator-view" class="view-section active">
                 <section class="calculator-section glass-card">
