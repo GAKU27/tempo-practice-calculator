@@ -1290,3 +1290,87 @@ body {
     cursor: pointer;
     border: none;
 }
+
+/* Dual Slider */
+.dual-slider {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.mini-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    outline: none;
+}
+
+.mini-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: var(--color-secondary);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.mini-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: var(--color-secondary);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+/* Light Theme */
+[data-theme="light"] {
+    --color-bg-dark: #f8fafc;
+    --color-bg-card: rgba(255, 255, 255, 0.8);
+    --color-bg-card-hover: rgba(255, 255, 255, 0.95);
+    --color-border: rgba(99, 102, 241, 0.3);
+    --color-border-light: rgba(99, 102, 241, 0.5);
+    --color-text-primary: #1e293b;
+    --color-text-secondary: #475569;
+    --color-text-muted: #64748b;
+}
+
+[data-theme="light"] .background-animation {
+    opacity: 0.3;
+}
+
+[data-theme="light"] .orb {
+    filter: blur(120px) brightness(0.8);
+}
+
+[data-theme="light"] .card {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .nav-menu {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+[data-theme="light"] .bpm-slider,
+[data-theme="light"] .volume-slider,
+[data-theme="light"] .mini-slider {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .control-btn,
+[data-theme="light"] .settings-toggle-btn {
+    border-color: rgba(0, 0, 0, 0.2);
+    color: var(--color-text-secondary);
+}
+
+[data-theme="light"] .settings-panel {
+    background: rgba(255, 255, 255, 0.95);
+}
+
+[data-theme="light"] .settings-panel-header {
+    background: rgba(0, 0, 0, 0.02);
+}

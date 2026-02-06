@@ -406,6 +406,41 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="setting-group">
+                                    <h4>漸進テンポ</h4>
+                                    <div class="setting-item">
+                                        <label>自動テンポアップ</label>
+                                        <select id="tempo-progression-select" class="setting-select">
+                                            <option value="off">オフ</option>
+                                            <option value="on">オン</option>
+                                        </select>
+                                    </div>
+                                    <div class="setting-item">
+                                        <label>+<span id="tempo-step-value">5</span> BPM / <span
+                                                id="tempo-bar-value">8</span>小節</label>
+                                        <div class="dual-slider">
+                                            <input type="range" id="tempo-step-slider" min="1" max="20" value="5"
+                                                class="mini-slider" title="BPM増加量">
+                                            <input type="range" id="tempo-bar-slider" min="2" max="32" value="8"
+                                                class="mini-slider" title="小節数">
+                                        </div>
+                                    </div>
+                                    <div class="setting-item">
+                                        <label>目標BPM <span id="target-tempo-value">180</span></label>
+                                        <input type="range" id="target-tempo-slider" min="60" max="250" value="180"
+                                            class="volume-slider">
+                                    </div>
+                                </div>
+                                <div class="setting-group">
+                                    <h4>テーマ</h4>
+                                    <div class="setting-item">
+                                        <label>カラーモード</label>
+                                        <select id="theme-select" class="setting-select">
+                                            <option value="dark">ダーク</option>
+                                            <option value="light">ライト</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

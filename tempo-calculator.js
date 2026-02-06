@@ -36,6 +36,14 @@
             this.pendulumEnabled = true;
             this.pendulumDirection = 'left';
             this.pendulumArm = null;
+
+            // 漸進テンポ
+            this.progressionEnabled = false;
+            this.progressionStep = 5; // BPM per step
+            this.progressionBars = 8; // bars before step up
+            this.targetTempo = 180;
+            this.barCount = 0;
+            this.onTempoChange = null; // callback
         }
 
         nextNote() {
@@ -50,6 +58,19 @@
                 this.currentBeatInBar++;
                 if (this.currentBeatInBar >= this.beatsPerBar) {
                     this.currentBeatInBar = 0;
+
+                    // 漸進テンポ: 小節カウント
+                    if (this.progressionEnabled) {
+                        this.barCount++;
+                        if (this.barCount >= this.progressionBars && this.tempo < this.targetTempo) {
+                            this.barCount = 0;
+                            const newTempo = Math.min(this.tempo + this.progressionStep, this.targetTempo);
+                            this.tempo = newTempo;
+                            if (this.onTempoChange) {
+                                this.onTempoChange(newTempo);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -508,6 +529,59 @@
                     break;
             }
         });
+
+        // Theme toggle
+        const themeSelect = document.getElementById('theme-select');
+        if (themeSelect) {
+            themeSelect.addEventListener('change', (e) => {
+                document.documentElement.setAttribute('data-theme', e.target.value);
+            });
+        }
+
+        // Tempo Progression
+        const progressionSelect = document.getElementById('tempo-progression-select');
+        const tempoStepSlider = document.getElementById('tempo-step-slider');
+        const tempoStepValue = document.getElementById('tempo-step-value');
+        const tempoBarSlider = document.getElementById('tempo-bar-slider');
+        const tempoBarValue = document.getElementById('tempo-bar-value');
+        const targetTempoSlider = document.getElementById('target-tempo-slider');
+        const targetTempoValue = document.getElementById('target-tempo-value');
+
+        if (progressionSelect) {
+            progressionSelect.addEventListener('change', (e) => {
+                metronome.progressionEnabled = e.target.value === 'on';
+                metronome.barCount = 0;
+            });
+        }
+
+        if (tempoStepSlider && tempoStepValue) {
+            tempoStepSlider.addEventListener('input', (e) => {
+                const value = parseInt(e.target.value);
+                metronome.progressionStep = value;
+                tempoStepValue.textContent = value;
+            });
+        }
+
+        if (tempoBarSlider && tempoBarValue) {
+            tempoBarSlider.addEventListener('input', (e) => {
+                const value = parseInt(e.target.value);
+                metronome.progressionBars = value;
+                tempoBarValue.textContent = value;
+            });
+        }
+
+        if (targetTempoSlider && targetTempoValue) {
+            targetTempoSlider.addEventListener('input', (e) => {
+                const value = parseInt(e.target.value);
+                metronome.targetTempo = value;
+                targetTempoValue.textContent = value;
+            });
+        }
+
+        // Tempo change callback from progression
+        metronome.onTempoChange = (newTempo) => {
+            updateTempo(newTempo);
+        };
     }
 
     /**
