@@ -312,20 +312,36 @@
                             <button type="button" id="metronome-play-btn" class="play-btn">
                                 <span class="btn-icon">▶</span>
                             </button>
-                            <button type="button" id="tap-tempo-btn" class="tap-btn">TAP</button>
+                            <div class="tap-container">
+                                <button type="button" id="tap-tempo-btn" class="tap-btn">TAP</button>
+                                <span class="tap-hint">リズムに合わせて連打でBPM測定</span>
+                            </div>
                         </div>
 
                         <!-- Settings -->
                         <div class="metronome-settings">
-                            <div class="setting-item">
-                                <label>拍子</label>
-                                <select id="time-signature-select" class="setting-select">
-                                    <option value="4">4 / 4</option>
-                                    <option value="3">3 / 4</option>
-                                    <option value="2">2 / 4</option>
-                                    <option value="1">1 / 1</option>
-                                    <option value="0">なし</option>
-                                </select>
+                            <div class="setting-row">
+                                <div class="setting-item">
+                                    <label>拍子</label>
+                                    <select id="time-signature-select" class="setting-select">
+                                        <option value="4">4 / 4</option>
+                                        <option value="3">3 / 4</option>
+                                        <option value="2">2 / 4</option>
+                                        <option value="5">5 / 4</option>
+                                        <option value="6">6 / 8</option>
+                                        <option value="7">7 / 8</option>
+                                        <option value="1">1 / 1</option>
+                                        <option value="0">なし（アクセントなし）</option>
+                                    </select>
+                                </div>
+                                <div class="setting-item">
+                                    <label>音色</label>
+                                    <select id="sound-type-select" class="setting-select">
+                                        <option value="click">クリック</option>
+                                        <option value="wood">ウッドブロック</option>
+                                        <option value="beep">ビープ</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>

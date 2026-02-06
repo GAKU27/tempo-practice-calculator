@@ -28,6 +28,7 @@
             this.scheduleAheadTime = 0.1; // seconds
             this.nextNoteTime = 0.0;
             this.timerID = null;
+            this.soundType = 'click'; // click, wood, beep
         }
 
         nextNote() {
@@ -49,16 +50,30 @@
                 }, Math.max(0, drawTime));
             });
 
-            // Audio
+            // Audio based on sound type
+            const isAccent = beatNumber === 0 && this.beatsPerBar > 0;
+
+            switch (this.soundType) {
+                case 'click':
+                    this.playClickSound(time, isAccent);
+                    break;
+                case 'wood':
+                    this.playWoodSound(time, isAccent);
+                    break;
+                case 'beep':
+                    this.playBeepSound(time, isAccent);
+                    break;
+                default:
+                    this.playClickSound(time, isAccent);
+            }
+        }
+
+        // クリック音（オリジナル）
+        playClickSound(time, isAccent) {
             const osc = this.audioContext.createOscillator();
             const envelope = this.audioContext.createGain();
 
-            // Frequency for Accent (beat 0) vs Normal beat
-            if (beatNumber === 0 && this.beatsPerBar > 0) {
-                osc.frequency.value = 880.0; // High pitch for accent
-            } else {
-                osc.frequency.value = 440.0; // Normal pitch
-            }
+            osc.frequency.value = isAccent ? 880.0 : 440.0;
 
             envelope.gain.value = 1;
             envelope.gain.exponentialRampToValueAtTime(1, time + 0.001);
@@ -69,6 +84,54 @@
 
             osc.start(time);
             osc.stop(time + 0.03);
+        }
+
+        // ウッドブロック風（ノイズ + フィルタ）
+        playWoodSound(time, isAccent) {
+            const bufferSize = this.audioContext.sampleRate * 0.02;
+            const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+
+            const noise = this.audioContext.createBufferSource();
+            noise.buffer = buffer;
+
+            const filter = this.audioContext.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = isAccent ? 1200 : 800;
+            filter.Q.value = 20;
+
+            const envelope = this.audioContext.createGain();
+            envelope.gain.setValueAtTime(isAccent ? 0.8 : 0.6, time);
+            envelope.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
+
+            noise.connect(filter);
+            filter.connect(envelope);
+            envelope.connect(this.audioContext.destination);
+
+            noise.start(time);
+            noise.stop(time + 0.05);
+        }
+
+        // ビープ音（サイン波）
+        playBeepSound(time, isAccent) {
+            const osc = this.audioContext.createOscillator();
+            const envelope = this.audioContext.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.value = isAccent ? 1000.0 : 800.0;
+
+            envelope.gain.setValueAtTime(0.5, time);
+            envelope.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
+
+            osc.connect(envelope);
+            envelope.connect(this.audioContext.destination);
+
+            osc.start(time);
+            osc.stop(time + 0.1);
         }
 
         scheduler() {
@@ -103,6 +166,10 @@
 
         setBeatsPerBar(beats) {
             this.beatsPerBar = beats;
+        }
+
+        setSoundType(type) {
+            this.soundType = type;
         }
 
         triggerVisual(beatNumber) {
@@ -252,6 +319,14 @@
         timeSignatureSelect.addEventListener('change', (e) => {
             metronome.setBeatsPerBar(parseInt(e.target.value));
         });
+
+        // Sound Type
+        const soundTypeSelect = document.getElementById('sound-type-select');
+        if (soundTypeSelect) {
+            soundTypeSelect.addEventListener('change', (e) => {
+                metronome.setSoundType(e.target.value);
+            });
+        }
 
         // Tap Tempo
         tapBtn.addEventListener('click', () => {
