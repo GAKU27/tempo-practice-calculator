@@ -570,11 +570,12 @@
             });
         }
 
-        if (targetTempoSlider && targetTempoValue) {
-            targetTempoSlider.addEventListener('input', (e) => {
-                const value = parseInt(e.target.value);
-                metronome.targetTempo = value;
-                targetTempoValue.textContent = value;
+        // Target tempo input
+        const targetTempoInput = document.getElementById('target-tempo-input');
+        if (targetTempoInput) {
+            targetTempoInput.addEventListener('input', (e) => {
+                const value = parseInt(e.target.value) || 180;
+                metronome.targetTempo = Math.max(30, Math.min(300, value));
             });
         }
 
