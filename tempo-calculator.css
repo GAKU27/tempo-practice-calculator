@@ -1364,28 +1364,24 @@ body {
 
 [data-theme="light"] .card,
 [data-theme="light"] .glass-card {
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(16px) saturate(1.8);
-    -webkit-backdrop-filter: blur(16px) saturate(1.8);
-    box-shadow:
-        0 8px 32px rgba(139, 92, 246, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px) saturate(1.5);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
+    box-shadow: none;
+    border: none;
 }
 
 [data-theme="light"] .card:hover,
 [data-theme="light"] .glass-card:hover {
-    box-shadow:
-        0 12px 40px rgba(99, 102, 241, 0.15),
-        0 4px 12px rgba(0, 0, 0, 0.06),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    box-shadow: none;
+    background: rgba(255, 255, 255, 0.2);
 }
 
 [data-theme="light"] .nav-menu {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%);
-    backdrop-filter: blur(20px);
-    border-color: rgba(99, 102, 241, 0.1);
-    box-shadow: -8px 0 32px rgba(99, 102, 241, 0.08);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px) saturate(1.5);
+    border: none;
+    box-shadow: none;
 }
 
 [data-theme="light"] .nav-item {
@@ -1394,7 +1390,7 @@ body {
 
 [data-theme="light"] .nav-item:hover,
 [data-theme="light"] .nav-item.active {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.08) 100%);
+    background: rgba(139, 92, 246, 0.15);
 }
 
 [data-theme="light"] .bpm-slider,
@@ -1405,52 +1401,47 @@ body {
 
 [data-theme="light"] .control-btn,
 [data-theme="light"] .settings-toggle-btn {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(8px);
-    border-color: rgba(139, 92, 246, 0.2);
+    border: none;
     color: var(--color-text-secondary);
 }
 
 [data-theme="light"] .control-btn:hover,
 [data-theme="light"] .settings-toggle-btn:hover {
     background: rgba(139, 92, 246, 0.15);
-    border-color: var(--color-primary);
 }
 
 [data-theme="light"] .settings-panel {
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(16px) saturate(1.8);
-    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px) saturate(1.5);
+    box-shadow: none;
+    border: none;
 }
 
 [data-theme="light"] .settings-panel-header {
-    background: rgba(139, 92, 246, 0.1);
-    border-bottom-color: rgba(139, 92, 246, 0.15);
+    background: rgba(139, 92, 246, 0.08);
+    border-bottom: none;
 }
 
 [data-theme="light"] .setting-select,
 [data-theme="light"] .setting-input {
-    background: rgba(255, 255, 255, 0.5);
-    border-color: rgba(139, 92, 246, 0.2);
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
     color: var(--color-text-primary);
 }
 
 [data-theme="light"] .setting-select:focus,
 [data-theme="light"] .setting-input:focus {
-    border-color: var(--color-primary);
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.5);
 }
 
 [data-theme="light"] .play-btn {
-    box-shadow:
-        0 8px 24px rgba(99, 102, 241, 0.35),
-        0 4px 8px rgba(99, 102, 241, 0.2);
+    box-shadow: none;
 }
 
 [data-theme="light"] .play-btn:hover {
-    box-shadow:
-        0 12px 32px rgba(99, 102, 241, 0.4),
-        0 6px 12px rgba(99, 102, 241, 0.25);
+    box-shadow: none;
 }
 
 [data-theme="light"] .visual-circle {
@@ -1509,15 +1500,14 @@ body {
 /* Light Theme - Form Inputs */
 [data-theme="light"] .form-group input,
 [data-theme="light"] .input-wrapper input {
-    background: rgba(255, 255, 255, 0.5);
-    border-color: rgba(139, 92, 246, 0.2);
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
     color: var(--color-text-primary);
 }
 
 [data-theme="light"] .form-group input:focus,
 [data-theme="light"] .input-wrapper input:focus {
-    background: rgba(255, 255, 255, 0.7);
-    border-color: var(--color-primary);
+    background: rgba(255, 255, 255, 0.5);
 }
 
 [data-theme="light"] .input-wrapper {
@@ -1538,19 +1528,20 @@ body {
 }
 
 [data-theme="light"] .result-item {
-    background: rgba(139, 92, 246, 0.1);
-    border-color: rgba(139, 92, 246, 0.15);
+    background: rgba(139, 92, 246, 0.08);
+    border: none;
 }
 
 [data-theme="light"] .header {
-    background: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(16px) saturate(1.8);
-    border-color: rgba(139, 92, 246, 0.1);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(16px) saturate(1.5);
+    border: none;
 }
 
 [data-theme="light"] .footer {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(12px);
+    border: none;
 }
 
 [data-theme="light"] .section-title {
@@ -1558,12 +1549,12 @@ body {
 }
 
 [data-theme="light"] .pendulum-container {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 [data-theme="light"] .quick-settings {
-    background: rgba(139, 92, 246, 0.08);
-    border-color: rgba(139, 92, 246, 0.15);
+    background: rgba(139, 92, 246, 0.05);
+    border: none;
 }
 
 [data-theme="light"] .nav-menu {
