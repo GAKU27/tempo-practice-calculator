@@ -8,7 +8,11 @@
 (function () {
     'use strict';
 
-    // Navigation Elements & Metronome Elements will be initialized in setup functions
+    // DOM Elements - will be set in init()
+    let form, resultsSection;
+    let totalTimeDisplay, totalTimeSecondsDisplay, stepCountDisplay;
+    let actualEndTempoDisplay, exactTimeDisplay, approxTimeDisplay;
+    let errorRateDisplay, totalBeatsPerStepDisplay;
 
     /**
      * Web Audio API Metronome Engine
@@ -487,8 +491,23 @@
      * 初期化
      */
     function init() {
-        form.addEventListener('submit', handleSubmit);
-        setupValidation();
+        // DOM Elements for Calculator - assign to global variables
+        form = document.getElementById('calculator-form');
+        resultsSection = document.getElementById('results-section');
+        totalTimeDisplay = document.getElementById('totalTime');
+        totalTimeSecondsDisplay = document.getElementById('totalTimeSeconds');
+        stepCountDisplay = document.getElementById('stepCount');
+        actualEndTempoDisplay = document.getElementById('actualEndTempo');
+        exactTimeDisplay = document.getElementById('exactTime');
+        approxTimeDisplay = document.getElementById('approxTime');
+        errorRateDisplay = document.getElementById('errorRate');
+        totalBeatsPerStepDisplay = document.getElementById('totalBeatsPerStep');
+
+        if (form) {
+            form.addEventListener('submit', handleSubmit);
+            setupValidation();
+        }
+
         setupKeyboardShortcuts();
 
         // Setup new functionalities
