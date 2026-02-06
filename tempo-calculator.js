@@ -88,7 +88,7 @@
 
         // ウッドブロック風（ノイズ + フィルタ）
         playWoodSound(time, isAccent) {
-            const bufferSize = this.audioContext.sampleRate * 0.02;
+            const bufferSize = Math.floor(this.audioContext.sampleRate * 0.02);
             const buffer = this.audioContext.createBuffer(1, bufferSize, this.audioContext.sampleRate);
             const data = buffer.getChannelData(0);
 
