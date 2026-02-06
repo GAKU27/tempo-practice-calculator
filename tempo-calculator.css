@@ -1503,8 +1503,8 @@ body {
 }
 
 [data-theme="light"] .pendulum-container {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
+    background: transparent;
+    border: none;
 }
 
 [data-theme="light"] .quick-settings {
