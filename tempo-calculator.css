@@ -1033,6 +1033,24 @@ body {
     text-align: center;
 }
 
+.setting-input {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: #1e293b;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-base);
+    text-align: center;
+    transition: all var(--transition-fast);
+}
+
+.setting-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
 .tap-container {
     display: flex;
     flex-direction: column;

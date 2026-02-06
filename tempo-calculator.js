@@ -193,10 +193,21 @@
         start() {
             if (this.isPlaying) return;
 
-            if (this.audioContext == null) {
+            if (!this.audioContext) {
                 this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             }
 
+            // iOS Safari requires resume after user gesture
+            if (this.audioContext.state === 'suspended') {
+                this.audioContext.resume().then(() => {
+                    this._startPlayback();
+                });
+            } else {
+                this._startPlayback();
+            }
+        }
+
+        _startPlayback() {
             this.isPlaying = true;
             this.currentBeatInBar = 0;
             this.nextNoteTime = this.audioContext.currentTime + 0.05;
