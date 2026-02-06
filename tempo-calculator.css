@@ -831,6 +831,12 @@ body {
     box-shadow: 0 0 20px var(--color-accent);
 }
 
+.visual-circle.sub-beat {
+    transform: scale(1.2);
+    background: var(--color-text-muted);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
 .metronome-controls {
     display: flex;
     align-items: center;
@@ -1253,4 +1259,34 @@ body {
     font-family: monospace;
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
+}
+
+/* Volume Slider */
+.volume-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    outline: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
 }

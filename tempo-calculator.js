@@ -20,6 +20,7 @@
     class Metronome {
         constructor() {
             this.audioContext = null;
+            this.gainNode = null; // Master volume
             this.isPlaying = false;
             this.currentBeatInBar = 0;
             this.currentSubdivision = 0;
@@ -31,6 +32,7 @@
             this.nextNoteTime = 0.0;
             this.timerID = null;
             this.soundType = 'click'; // click, wood, beep
+            this.volume = 0.8; // 0.0 - 1.0
             this.pendulumEnabled = true;
             this.pendulumDirection = 'left';
             this.pendulumArm = null;
@@ -84,14 +86,15 @@
         }
 
         // クリック音（オリジナル）
-        playClickSound(time, isAccent) {
+        playClickSound(time, isAccent, isMainBeat) {
             const osc = this.audioContext.createOscillator();
             const envelope = this.audioContext.createGain();
 
             osc.frequency.value = isAccent ? 880.0 : 440.0;
 
-            envelope.gain.value = 1;
-            envelope.gain.exponentialRampToValueAtTime(1, time + 0.001);
+            // Volume adjustment for sub-beats
+            const baseVolume = isMainBeat ? 1.0 : 0.5;
+            envelope.gain.setValueAtTime(baseVolume * this.volume, time);
             envelope.gain.exponentialRampToValueAtTime(0.001, time + 0.02);
 
             osc.connect(envelope);
@@ -102,7 +105,9 @@
         }
 
         // ウッドブロック風（高周波 + 急速減衰）
-        playWoodSound(time, isAccent) {
+        playWoodSound(time, isAccent, isMainBeat) {
+            const baseVolume = isMainBeat ? 1.0 : 0.5;
+
             // メイン音（三角波で木の響き）
             const osc = this.audioContext.createOscillator();
             const envelope = this.audioContext.createGain();
@@ -111,7 +116,7 @@
             osc.frequency.setValueAtTime(isAccent ? 1500 : 1200, time);
             osc.frequency.exponentialRampToValueAtTime(isAccent ? 600 : 400, time + 0.015);
 
-            envelope.gain.setValueAtTime(isAccent ? 0.6 : 0.4, time);
+            envelope.gain.setValueAtTime((isAccent ? 0.6 : 0.4) * baseVolume * this.volume, time);
             envelope.gain.exponentialRampToValueAtTime(0.001, time + 0.04);
 
             osc.connect(envelope);
@@ -127,7 +132,7 @@
             click.type = 'square';
             click.frequency.value = isAccent ? 2000 : 1600;
 
-            clickEnv.gain.setValueAtTime(isAccent ? 0.3 : 0.2, time);
+            clickEnv.gain.setValueAtTime((isAccent ? 0.3 : 0.2) * baseVolume * this.volume, time);
             clickEnv.gain.exponentialRampToValueAtTime(0.001, time + 0.01);
 
             click.connect(clickEnv);
@@ -138,14 +143,15 @@
         }
 
         // ビープ音（サイン波）
-        playBeepSound(time, isAccent) {
+        playBeepSound(time, isAccent, isMainBeat) {
             const osc = this.audioContext.createOscillator();
             const envelope = this.audioContext.createGain();
 
             osc.type = 'sine';
             osc.frequency.value = isAccent ? 1000.0 : 800.0;
 
-            envelope.gain.setValueAtTime(0.5, time);
+            const baseVolume = isMainBeat ? 1.0 : 0.5;
+            envelope.gain.setValueAtTime(0.5 * baseVolume * this.volume, time);
             envelope.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
 
             osc.connect(envelope);
@@ -179,6 +185,14 @@
         stop() {
             this.isPlaying = false;
             clearTimeout(this.timerID);
+            this.resetPendulum();
+        }
+
+        resetPendulum() {
+            if (this.pendulumArm) {
+                this.pendulumArm.classList.remove('swinging-left', 'swinging-right');
+                this.pendulumDirection = 'left';
+            }
         }
 
         setTempo(bpm) {
@@ -191,6 +205,10 @@
 
         setSoundType(type) {
             this.soundType = type;
+        }
+
+        setVolume(value) {
+            this.volume = value;
         }
 
         setSubdivision(value) {
@@ -448,28 +466,46 @@
             });
         }
 
-        // Tap Tempo
-        tapBtn.addEventListener('click', () => {
-            const now = Date.now();
-            if (tapTimes.length > 0 && now - tapTimes[tapTimes.length - 1] > TAP_TIMEOUT) {
-                tapTimes = []; // Reset if too long between taps
+        // Volume slider
+        const volumeSlider = document.getElementById('volume-slider');
+        const volumeValue = document.getElementById('volume-value');
+
+        if (volumeSlider) {
+            volumeSlider.addEventListener('input', (e) => {
+                const value = parseInt(e.target.value);
+                metronome.setVolume(value / 100);
+                if (volumeValue) {
+                    volumeValue.textContent = value;
+                }
+            });
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Only handle keyboard shortcuts when not focused on inputs
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
+                return;
             }
 
-            tapTimes.push(now);
-            if (tapTimes.length > 4) tapTimes.shift(); // Keep last 4 taps
-
-            if (tapTimes.length >= 2) {
-                let intervals = [];
-                for (let i = 1; i < tapTimes.length; i++) {
-                    intervals.push(tapTimes[i] - tapTimes[i - 1]);
-                }
-                const avgInterval = intervals.reduce((a, b) => a + b) / intervals.length;
-                const bpm = Math.round(60000 / avgInterval);
-                updateTempo(bpm);
-
-                // Visual feedback for tap
-                tapBtn.style.transform = 'scale(0.95)';
-                setTimeout(() => tapBtn.style.transform = 'scale(1)', 100);
+            switch (e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    if (metronome.isPlaying) {
+                        metronome.stop();
+                        playBtn.classList.remove('playing');
+                    } else {
+                        metronome.start();
+                        playBtn.classList.add('playing');
+                    }
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    updateTempo(parseInt(bpmSlider.value) + 1);
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    updateTempo(parseInt(bpmSlider.value) - 1);
+                    break;
             }
         });
     }
