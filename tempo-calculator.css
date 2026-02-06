@@ -1391,10 +1391,12 @@ body {
 
 [data-theme="light"] .form-group input,
 [data-theme="light"] .input-wrapper input {
-    background: #f9fafb;
+    background: #ffffff;
     border: 1px solid #d1d5db;
-    border-radius: 12px;
+    border-radius: 25px;
     color: #111827;
+    padding: 14px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 [data-theme="light"] .form-group input:focus,
