@@ -1430,3 +1430,61 @@ body {
     -webkit-appearance: none;
     margin: 0;
 }
+
+/* Settings Content */
+.settings-content {
+    padding: var(--space-md);
+}
+
+.settings-content .setting-group {
+    margin-bottom: var(--space-lg);
+}
+
+.settings-content .setting-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Light Theme - Form Inputs */
+[data-theme="light"] .form-group input,
+[data-theme="light"] .input-wrapper input {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(99, 102, 241, 0.2);
+    color: var(--color-text-primary);
+}
+
+[data-theme="light"] .form-group input:focus,
+[data-theme="light"] .input-wrapper input:focus {
+    background: rgba(255, 255, 255, 1);
+    border-color: var(--color-primary);
+}
+
+[data-theme="light"] .input-wrapper {
+    background: transparent;
+}
+
+[data-theme="light"] .form-group label,
+[data-theme="light"] .group-title {
+    color: var(--color-text-primary);
+}
+
+[data-theme="light"] .hint {
+    color: var(--color-text-muted);
+}
+
+[data-theme="light"] .result-value {
+    color: var(--color-text-primary);
+}
+
+[data-theme="light"] .result-item {
+    background: rgba(99, 102, 241, 0.05);
+    border-color: rgba(99, 102, 241, 0.1);
+}
+
+[data-theme="light"] .header {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(99, 102, 241, 0.1);
+}
+
+[data-theme="light"] .footer {
+    background: rgba(255, 255, 255, 0.8);
+}

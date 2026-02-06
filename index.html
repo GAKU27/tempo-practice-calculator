@@ -60,6 +60,11 @@
                         <span class="nav-icon">⏱️</span> メトロノーム
                     </button>
                 </li>
+                <li>
+                    <button type="button" class="nav-item" data-target="settings-view">
+                        <span class="nav-icon">⚙️</span> 全体設定
+                    </button>
+                </li>
             </ul>
         </nav>
 
@@ -431,16 +436,28 @@
                                             class="setting-input">
                                     </div>
                                 </div>
-                                <div class="setting-group">
-                                    <h4>テーマ</h4>
-                                    <div class="setting-item">
-                                        <label>カラーモード</label>
-                                        <select id="theme-select" class="setting-select">
-                                            <option value="dark">ダーク</option>
-                                            <option value="light">ライト</option>
-                                        </select>
-                                    </div>
-                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Settings View -->
+            <div id="settings-view" class="view-section">
+                <section class="card">
+                    <h2 class="section-title">
+                        <span class="title-icon">⚙️</span>
+                        全体設定
+                    </h2>
+                    <div class="settings-content">
+                        <div class="setting-group">
+                            <h4>外観</h4>
+                            <div class="setting-item">
+                                <label>カラーモード</label>
+                                <select id="theme-select" class="setting-select">
+                                    <option value="dark">ダーク</option>
+                                    <option value="light">ライト</option>
+                                </select>
                             </div>
                         </div>
                     </div>
