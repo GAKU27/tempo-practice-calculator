@@ -842,6 +842,7 @@ body {
 .bpm-slider {
     flex: 1;
     -webkit-appearance: none;
+    appearance: none;
     height: 6px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 3px;
