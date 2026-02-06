@@ -1128,11 +1128,12 @@ body {
 .pendulum-container {
     position: relative;
     width: 120px;
-    height: 140px;
+    height: 160px;
     margin: var(--space-lg) auto;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-end;
 }
 
 .pendulum-container.hidden {
@@ -1141,11 +1142,11 @@ body {
 
 .pendulum-arm {
     position: absolute;
-    top: 0;
+    bottom: 20px;
     width: 3px;
-    height: 100px;
-    background: linear-gradient(to bottom, var(--color-primary), var(--color-secondary));
-    transform-origin: top center;
+    height: 110px;
+    background: linear-gradient(to top, var(--color-primary), var(--color-secondary));
+    transform-origin: bottom center;
     border-radius: 2px;
     /* 曲線的なイージング */
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1153,11 +1154,11 @@ body {
 
 .pendulum-weight {
     position: absolute;
-    bottom: -12px;
+    top: 25px;
     left: 50%;
     transform: translateX(-50%);
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     background: var(--gradient-primary);
     border-radius: 50%;
     box-shadow:
@@ -1168,9 +1169,9 @@ body {
 
 .pendulum-base {
     position: absolute;
-    top: -6px;
-    width: 16px;
-    height: 16px;
+    bottom: 10px;
+    width: 20px;
+    height: 20px;
     background: var(--color-bg-card);
     border: 2px solid var(--color-border-light);
     border-radius: 50%;
@@ -1179,11 +1180,11 @@ body {
 
 /* Pendulum Animation - 曲線的な動き */
 .pendulum-arm.swinging-left {
-    transform: rotate(-30deg);
+    transform: rotate(-25deg);
 }
 
 .pendulum-arm.swinging-right {
-    transform: rotate(30deg);
+    transform: rotate(25deg);
 }
 
 /* Quick Settings */
