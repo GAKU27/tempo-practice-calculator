@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tempo-calculator-v14';
+const CACHE_NAME = 'tempo-calculator-v15';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -41,20 +41,24 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Fetch Event: Network first, fall back to cache (for fresh content)
+// Fetch Event: Network First with Cache Fallback
+// オンライン時 → 常に最新を取得してキャッシュも更新
+// オフライン時 → 前回キャッシュしたものを使用
 self.addEventListener('fetch', (event) => {
     event.respondWith(
         fetch(event.request)
             .then((response) => {
-                // Clone the response for caching
-                const responseToCache = response.clone();
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, responseToCache);
-                });
+                // 成功した場合、レスポンスをキャッシュに保存
+                if (response.status === 200) {
+                    const responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
+                }
                 return response;
             })
             .catch(() => {
-                // Network failed, try cache
+                // ネットワークエラー（オフライン）の場合、キャッシュから取得
                 return caches.match(event.request);
             })
     );
