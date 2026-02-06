@@ -8,19 +8,254 @@
 (function () {
     'use strict';
 
-    // DOM Elements
-    const form = document.getElementById('calculator-form');
-    const resultsSection = document.getElementById('results-section');
+    // Navigation Elements
+    const menuBtn = document.getElementById('menu-btn');
+    const closeMenuBtn = document.getElementById('close-menu-btn');
+    const navMenu = document.getElementById('nav-menu');
+    const navOverlay = document.getElementById('nav-overlay');
+    const navItems = document.querySelectorAll('.nav-item');
+    const viewSections = document.querySelectorAll('.view-section');
 
-    // Result display elements
-    const totalTimeDisplay = document.getElementById('totalTime');
-    const totalTimeSecondsDisplay = document.getElementById('totalTimeSeconds');
-    const stepCountDisplay = document.getElementById('stepCount');
-    const actualEndTempoDisplay = document.getElementById('actualEndTempo');
-    const exactTimeDisplay = document.getElementById('exactTime');
-    const approxTimeDisplay = document.getElementById('approxTime');
-    const errorRateDisplay = document.getElementById('errorRate');
-    const totalBeatsPerStepDisplay = document.getElementById('totalBeatsPerStep');
+    // Metronome Elements
+    const bpmDisplay = document.getElementById('bpm-display');
+    const bpmSlider = document.getElementById('bpm-slider');
+    const bpmIncrease = document.getElementById('bpm-increase');
+    const bpmDecrease = document.getElementById('bpm-decrease');
+    const playBtn = document.getElementById('metronome-play-btn');
+    const tapBtn = document.getElementById('tap-tempo-btn');
+    const timeSignatureSelect = document.getElementById('time-signature-select');
+    const visualCircle = document.getElementById('visual-circle');
+
+    /**
+     * Web Audio API Metronome Engine
+     */
+    class Metronome {
+        constructor() {
+            this.audioContext = null;
+            this.isPlaying = false;
+            this.currentBeatInBar = 0;
+            this.beatsPerBar = 4;
+            this.tempo = 120;
+            this.lookahead = 25.0; // ms
+            this.scheduleAheadTime = 0.1; // seconds
+            this.nextNoteTime = 0.0;
+            this.timerID = null;
+        }
+
+        nextNote() {
+            const secondsPerBeat = 60.0 / this.tempo;
+            this.nextNoteTime += secondsPerBeat;
+
+            this.currentBeatInBar++;
+            if (this.currentBeatInBar >= this.beatsPerBar) {
+                this.currentBeatInBar = 0;
+            }
+        }
+
+        scheduleNote(beatNumber, time) {
+            // Visual feedback
+            requestAnimationFrame(() => {
+                const drawTime = (time - this.audioContext.currentTime) * 1000;
+                setTimeout(() => {
+                    this.triggerVisual(beatNumber);
+                }, Math.max(0, drawTime));
+            });
+
+            // Audio
+            const osc = this.audioContext.createOscillator();
+            const envelope = this.audioContext.createGain();
+
+            // Frequency for Accent (beat 0) vs Normal beat
+            if (beatNumber === 0 && this.beatsPerBar > 0) {
+                osc.frequency.value = 880.0; // High pitch for accent
+            } else {
+                osc.frequency.value = 440.0; // Normal pitch
+            }
+
+            envelope.gain.value = 1;
+            envelope.gain.exponentialRampToValueAtTime(1, time + 0.001);
+            envelope.gain.exponentialRampToValueAtTime(0.001, time + 0.02);
+
+            osc.connect(envelope);
+            envelope.connect(this.audioContext.destination);
+
+            osc.start(time);
+            osc.stop(time + 0.03);
+        }
+
+        scheduler() {
+            while (this.nextNoteTime < this.audioContext.currentTime + this.scheduleAheadTime) {
+                this.scheduleNote(this.currentBeatInBar, this.nextNoteTime);
+                this.nextNote();
+            }
+            this.timerID = setTimeout(() => this.scheduler(), this.lookahead);
+        }
+
+        start() {
+            if (this.isPlaying) return;
+
+            if (this.audioContext == null) {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            this.isPlaying = true;
+            this.currentBeatInBar = 0;
+            this.nextNoteTime = this.audioContext.currentTime + 0.05;
+            this.scheduler();
+        }
+
+        stop() {
+            this.isPlaying = false;
+            clearTimeout(this.timerID);
+        }
+
+        setTempo(bpm) {
+            this.tempo = bpm;
+        }
+
+        setBeatsPerBar(beats) {
+            this.beatsPerBar = beats;
+        }
+
+        triggerVisual(beatNumber) {
+            const isAccent = beatNumber === 0 && this.beatsPerBar > 0;
+            visualCircle.className = 'visual-circle'; // reset
+
+            // Force reflow
+            void visualCircle.offsetWidth;
+
+            if (isAccent) {
+                visualCircle.classList.add('accent');
+            } else {
+                visualCircle.classList.add('beat');
+            }
+
+            setTimeout(() => {
+                visualCircle.classList.remove('beat', 'accent');
+            }, 100);
+        }
+    }
+
+    const metronome = new Metronome();
+
+    // Tap Tempo Logic
+    let tapTimes = [];
+    const TAP_TIMEOUT = 2000; // Reset taps after 2 seconds
+
+    /**
+     * Navigation Logic
+     */
+    function setupNavigation() {
+        const toggleMenu = () => {
+            navMenu.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+        };
+
+        menuBtn.addEventListener('click', toggleMenu);
+        closeMenuBtn.addEventListener('click', toggleMenu);
+        navOverlay.addEventListener('click', toggleMenu);
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const targetId = item.getAttribute('data-target');
+
+                // Switch View
+                viewSections.forEach(section => {
+                    if (section.id === targetId) {
+                        section.classList.remove('hidden');
+                        section.classList.add('active');
+                    } else {
+                        section.classList.add('hidden');
+                        section.classList.remove('active');
+                    }
+                });
+
+                // Update Menu State
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+
+                // Close Menu
+                toggleMenu();
+
+                // Stop metronome if leaving metronome view
+                if (targetId !== 'metronome-view' && metronome.isPlaying) {
+                    metronome.stop();
+                    playBtn.classList.remove('playing');
+                }
+            });
+        });
+    }
+
+    /**
+     * Metronome Controls Logic
+     */
+    function setupMetronome() {
+        // Tempo Change (Slider & Buttons)
+        const updateTempo = (bpm) => {
+            let newBpm = Math.min(Math.max(bpm, 30), 250); // Clamp 30-250
+            bpmDisplay.textContent = newBpm;
+            bpmSlider.value = newBpm;
+            metronome.setTempo(newBpm);
+
+            // Update tempo text (Allegro etc.)
+            let text = '';
+            if (newBpm < 60) text = 'Largo';
+            else if (newBpm < 66) text = 'Larghetto';
+            else if (newBpm < 76) text = 'Adagio';
+            else if (newBpm < 108) text = 'Andante';
+            else if (newBpm < 120) text = 'Moderato';
+            else if (newBpm < 168) text = 'Allegro';
+            else if (newBpm < 200) text = 'Presto';
+            else text = 'Prestissimo';
+
+            document.querySelector('.bpm-text').textContent = text;
+        };
+
+        bpmSlider.addEventListener('input', (e) => updateTempo(parseInt(e.target.value)));
+        bpmIncrease.addEventListener('click', () => updateTempo(parseInt(bpmSlider.value) + 1));
+        bpmDecrease.addEventListener('click', () => updateTempo(parseInt(bpmSlider.value) - 1));
+
+        // Play/Stop
+        playBtn.addEventListener('click', () => {
+            if (metronome.isPlaying) {
+                metronome.stop();
+                playBtn.classList.remove('playing');
+            } else {
+                metronome.start();
+                playBtn.classList.add('playing');
+            }
+        });
+
+        // Time Signature
+        timeSignatureSelect.addEventListener('change', (e) => {
+            metronome.setBeatsPerBar(parseInt(e.target.value));
+        });
+
+        // Tap Tempo
+        tapBtn.addEventListener('click', () => {
+            const now = Date.now();
+            if (tapTimes.length > 0 && now - tapTimes[tapTimes.length - 1] > TAP_TIMEOUT) {
+                tapTimes = []; // Reset if too long between taps
+            }
+
+            tapTimes.push(now);
+            if (tapTimes.length > 4) tapTimes.shift(); // Keep last 4 taps
+
+            if (tapTimes.length >= 2) {
+                let intervals = [];
+                for (let i = 1; i < tapTimes.length; i++) {
+                    intervals.push(tapTimes[i] - tapTimes[i - 1]);
+                }
+                const avgInterval = intervals.reduce((a, b) => a + b) / intervals.length;
+                const bpm = Math.round(60000 / avgInterval);
+                updateTempo(bpm);
+
+                // Visual feedback for tap
+                tapBtn.style.transform = 'scale(0.95)';
+                setTimeout(() => tapBtn.style.transform = 'scale(1)', 100);
+            }
+        });
+    }
 
     /**
      * 高精度総和計算（Kahan Summationアルゴリズム）
@@ -237,7 +472,12 @@
         form.addEventListener('submit', handleSubmit);
         setupValidation();
         setupKeyboardShortcuts();
-        console.log('Tempo Practice Calculator initialized');
+
+        // Setup new functionalities
+        setupNavigation();
+        setupMetronome();
+
+        console.log('Tempo Practice Calculator (Simultaneous Metronome Edition) initialized');
     }
 
     // DOMContentLoaded後に初期化

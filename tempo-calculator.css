@@ -631,6 +631,339 @@ body {
     margin-top: var(--space-lg);
 }
 
+/* Navigation Menu */
+.nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.nav-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.95);
+    border-right: 1px solid var(--color-border);
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-menu.active {
+    transform: translateX(0);
+}
+
+.nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.nav-header h2 {
+    font-size: var(--font-size-lg);
+    color: var(--color-text-primary);
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.nav-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    text-align: left;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.nav-item:hover {
+    background: var(--color-bg-card-hover);
+    color: var(--color-text-primary);
+}
+
+.nav-item.active {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: var(--color-primary);
+    color: var(--color-primary-light);
+}
+
+.nav-icon {
+    font-size: 1.25rem;
+}
+
+/* View Section Control */
+.view-section {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+
+.view-section.hidden {
+    display: none;
+}
+
+/* Header Menu Button */
+.icon-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-text-primary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.icon-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.header-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#menu-btn {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+/* Metronome Styles */
+.metronome-app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xl);
+    padding: var(--space-md);
+}
+
+.bpm-display-area {
+    text-align: center;
+}
+
+.bpm-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    letter-spacing: 0.2em;
+}
+
+.bpm-value {
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1;
+    margin: var(--space-xs) 0;
+    font-feature-settings: "tnum";
+    text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+}
+
+.bpm-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-primary-light);
+    font-style: italic;
+}
+
+.metronome-visual {
+    width: 200px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: var(--space-md) 0;
+}
+
+.visual-circle {
+    width: 20px;
+    height: 20px;
+    background: var(--color-text-muted);
+    border-radius: 50%;
+    transition: transform 0.1s, background 0.1s;
+}
+
+.visual-circle.beat {
+    transform: scale(1.5);
+    background: var(--color-primary-light);
+    box-shadow: 0 0 15px var(--color-primary);
+}
+
+.visual-circle.accent {
+    transform: scale(2);
+    background: var(--color-accent);
+    box-shadow: 0 0 20px var(--color-accent);
+}
+
+.metronome-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    width: 100%;
+    max-width: 400px;
+}
+
+.bpm-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    outline: none;
+}
+
+.bpm-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+.control-btn.small {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-primary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.control-btn.small:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.play-controls {
+    display: flex;
+    gap: var(--space-lg);
+    align-items: center;
+}
+
+.play-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.play-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5);
+}
+
+.play-btn:active {
+    transform: scale(0.95);
+}
+
+.play-btn.playing {
+    background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+}
+
+.play-btn.playing .btn-icon::before {
+    content: "II";
+    /* Pause icon approximation */
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.play-btn.playing .btn-icon {
+    font-size: 0;
+    /* Hide play triangle */
+}
+
+.play-btn.playing .btn-icon::before {
+    font-size: 1.5rem;
+}
+
+.tap-btn {
+    padding: var(--space-md) var(--space-lg);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    color: var(--color-text-muted);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tap-btn:active {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text-primary);
+    transform: scale(0.95);
+}
+
+.metronome-settings {
+    width: 100%;
+    max-width: 200px;
+}
+
+.setting-select {
+    width: 100%;
+    padding: var(--space-sm);
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    font-size: var(--font-size-base);
+    text-align: center;
+    cursor: pointer;
+}
+
 .attribution {
     font-size: var(--font-size-xs);
     color: var(--color-text-muted);
