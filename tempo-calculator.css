@@ -1553,6 +1553,276 @@ body {
 }
 
 /* ========================================
+   TIMER / STOPWATCH STYLES
+   ======================================== */
+
+.timer-section {
+    text-align: center;
+}
+
+/* Timer Tabs */
+.timer-tabs {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: center;
+    margin-bottom: var(--space-xl);
+}
+
+.timer-tab {
+    padding: var(--space-sm) var(--space-lg);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.timer-tab:hover {
+    border-color: var(--color-primary);
+    color: var(--color-text-primary);
+}
+
+.timer-tab.active {
+    background: var(--gradient-primary);
+    border-color: transparent;
+    color: white;
+}
+
+/* Timer Display */
+.timer-display-container {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    margin: var(--space-2xl) 0;
+}
+
+.timer-display {
+    font-size: 4rem;
+    font-weight: 700;
+    font-family: 'Inter', monospace;
+    color: var(--color-text-primary);
+    letter-spacing: 0.02em;
+}
+
+.timer-ms {
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--color-text-muted);
+    margin-left: 4px;
+}
+
+/* Countdown Settings */
+.countdown-settings {
+    margin-bottom: var(--space-xl);
+}
+
+.countdown-inputs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+}
+
+.countdown-input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.countdown-input {
+    width: 80px;
+    height: 60px;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    color: var(--color-text-primary);
+}
+
+.countdown-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.countdown-separator {
+    font-size: 2rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+}
+
+.countdown-input-group label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+/* Timer Controls */
+.timer-controls {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-xl);
+}
+
+.timer-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-xl);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: none;
+}
+
+.timer-btn .btn-icon {
+    font-size: 1.2rem;
+}
+
+.timer-btn.primary {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+}
+
+.timer-btn.primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+}
+
+.timer-btn.secondary {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+}
+
+.timer-btn.secondary:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.timer-btn.tertiary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+}
+
+.timer-btn.tertiary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--color-primary);
+}
+
+.timer-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Lap Section */
+.lap-section {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-lg);
+}
+
+.lap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+
+.lap-header h3 {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+}
+
+.lap-record-btn {
+    padding: var(--space-xs) var(--space-md);
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: var(--radius-full);
+    color: #10b981;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.lap-record-btn:hover:not(:disabled) {
+    background: rgba(16, 185, 129, 0.3);
+}
+
+.lap-record-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.lap-list {
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.lap-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-xs);
+}
+
+.lap-number {
+    font-weight: 600;
+    color: var(--color-text-muted);
+}
+
+.lap-time {
+    font-family: 'Inter', monospace;
+    color: var(--color-text-primary);
+}
+
+.lap-diff {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+/* Light Theme Timer Styles */
+[data-theme="light"] .timer-tab {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: #d1d5db;
+    color: #6b7280;
+}
+
+[data-theme="light"] .timer-tab.active {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+[data-theme="light"] .countdown-input {
+    background: #ffffff;
+    border-color: #d1d5db;
+}
+
+[data-theme="light"] .timer-btn.tertiary {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+[data-theme="light"] .lap-item {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+/* ========================================
    RESPONSIVE DESIGN
    ======================================== */
 

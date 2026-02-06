@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tempo-calculator-v7';
+const CACHE_NAME = 'tempo-calculator-v8';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',

@@ -66,6 +66,11 @@
                         <span class="nav-icon">⚙️</span> 全体設定
                     </button>
                 </li>
+                <li>
+                    <button type="button" class="nav-item" data-target="timer-view">
+                        <span class="nav-icon">⏳</span> タイマー
+                    </button>
+                </li>
             </ul>
         </nav>
 
@@ -439,6 +444,70 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Timer View -->
+            <div id="timer-view" class="view-section">
+                <section class="timer-section glass-card">
+                    <h2 class="section-title">
+                        <span class="title-icon">⏳</span>
+                        タイマー / ストップウォッチ
+                    </h2>
+
+                    <!-- Mode Tabs -->
+                    <div class="timer-tabs">
+                        <button type="button" class="timer-tab active" data-mode="stopwatch">ストップウォッチ</button>
+                        <button type="button" class="timer-tab" data-mode="countdown">カウントダウン</button>
+                    </div>
+
+                    <!-- Timer Display -->
+                    <div class="timer-display-container">
+                        <div class="timer-display" id="timer-display">00:00:00</div>
+                        <div class="timer-ms" id="timer-ms">.00</div>
+                    </div>
+
+                    <!-- Countdown Settings (hidden by default) -->
+                    <div id="countdown-settings" class="countdown-settings hidden">
+                        <div class="countdown-inputs">
+                            <div class="countdown-input-group">
+                                <input type="number" id="countdown-minutes" value="5" min="0" max="99"
+                                    class="countdown-input">
+                                <label>分</label>
+                            </div>
+                            <span class="countdown-separator">:</span>
+                            <div class="countdown-input-group">
+                                <input type="number" id="countdown-seconds" value="0" min="0" max="59"
+                                    class="countdown-input">
+                                <label>秒</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timer Controls -->
+                    <div class="timer-controls">
+                        <button type="button" id="timer-start-btn" class="timer-btn primary">
+                            <span class="btn-icon">▶</span>
+                            スタート
+                        </button>
+                        <button type="button" id="timer-stop-btn" class="timer-btn secondary" disabled>
+                            <span class="btn-icon">❚❚</span>
+                            ストップ
+                        </button>
+                        <button type="button" id="timer-reset-btn" class="timer-btn tertiary">
+                            <span class="btn-icon">↺</span>
+                            リセット
+                        </button>
+                    </div>
+
+                    <!-- Lap Times -->
+                    <div class="lap-section">
+                        <div class="lap-header">
+                            <h3>ラップタイム</h3>
+                            <button type="button" id="lap-btn" class="lap-record-btn" disabled>記録</button>
+                        </div>
+                        <ul id="lap-list" class="lap-list"></ul>
                     </div>
                 </section>
             </div>

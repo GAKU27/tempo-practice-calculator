@@ -819,8 +819,166 @@
         // Setup new functionalities
         setupNavigation();
         setupMetronome();
+        setupTimer();
 
         console.log('Tempo Practice Calculator (Simultaneous Metronome Edition) initialized');
+    }
+
+    /**
+     * Timer / Stopwatch functionality
+     */
+    function setupTimer() {
+        const timerDisplay = document.getElementById('timer-display');
+        const timerMs = document.getElementById('timer-ms');
+        const startBtn = document.getElementById('timer-start-btn');
+        const stopBtn = document.getElementById('timer-stop-btn');
+        const resetBtn = document.getElementById('timer-reset-btn');
+        const lapBtn = document.getElementById('lap-btn');
+        const lapList = document.getElementById('lap-list');
+        const timerTabs = document.querySelectorAll('.timer-tab');
+        const countdownSettings = document.getElementById('countdown-settings');
+        const countdownMinutes = document.getElementById('countdown-minutes');
+        const countdownSeconds = document.getElementById('countdown-seconds');
+
+        if (!timerDisplay || !startBtn) return;
+
+        let timerInterval = null;
+        let elapsedTime = 0; // milliseconds
+        let isRunning = false;
+        let isCountdown = false;
+        let countdownTarget = 0;
+        let laps = [];
+        let lastLapTime = 0;
+
+        function formatTime(ms) {
+            const totalSeconds = Math.floor(ms / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function formatMs(ms) {
+            return `.${String(Math.floor((ms % 1000) / 10)).padStart(2, '0')}`;
+        }
+
+        function updateDisplay() {
+            const displayTime = isCountdown ? Math.max(0, countdownTarget - elapsedTime) : elapsedTime;
+            timerDisplay.textContent = formatTime(displayTime);
+            timerMs.textContent = formatMs(displayTime);
+
+            // Countdown finished
+            if (isCountdown && displayTime <= 0 && isRunning) {
+                stopTimer();
+                timerDisplay.style.color = '#ef4444';
+                // Play beep sound
+                playTimerBeep();
+            }
+        }
+
+        function playTimerBeep() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 880;
+                gainNode.gain.value = 0.3;
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.5);
+            } catch (e) {
+                console.log('Audio not available');
+            }
+        }
+
+        function startTimer() {
+            if (isRunning) return;
+
+            if (isCountdown) {
+                const mins = parseInt(countdownMinutes.value) || 0;
+                const secs = parseInt(countdownSeconds.value) || 0;
+                countdownTarget = (mins * 60 + secs) * 1000;
+                if (countdownTarget <= 0) return;
+            }
+
+            isRunning = true;
+            const startTime = Date.now() - elapsedTime;
+
+            timerInterval = setInterval(() => {
+                elapsedTime = Date.now() - startTime;
+                updateDisplay();
+            }, 10);
+
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            lapBtn.disabled = false;
+            timerDisplay.style.color = '';
+        }
+
+        function stopTimer() {
+            if (!isRunning) return;
+
+            isRunning = false;
+            clearInterval(timerInterval);
+
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+        }
+
+        function resetTimer() {
+            stopTimer();
+            elapsedTime = 0;
+            laps = [];
+            lastLapTime = 0;
+            updateDisplay();
+            lapList.innerHTML = '';
+            lapBtn.disabled = true;
+            timerDisplay.style.color = '';
+        }
+
+        function recordLap() {
+            if (!isRunning) return;
+
+            const lapTime = elapsedTime;
+            const lapDiff = lapTime - lastLapTime;
+            lastLapTime = lapTime;
+            laps.push({ time: lapTime, diff: lapDiff });
+
+            const li = document.createElement('li');
+            li.className = 'lap-item';
+            li.innerHTML = `
+                <span class="lap-number">#${laps.length}</span>
+                <span class="lap-time">${formatTime(lapTime)}${formatMs(lapTime)}</span>
+                <span class="lap-diff">+${formatTime(lapDiff)}${formatMs(lapDiff)}</span>
+            `;
+            lapList.insertBefore(li, lapList.firstChild);
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', startTimer);
+        stopBtn.addEventListener('click', stopTimer);
+        resetBtn.addEventListener('click', resetTimer);
+        lapBtn.addEventListener('click', recordLap);
+
+        // Tab switching
+        timerTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                timerTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                isCountdown = tab.dataset.mode === 'countdown';
+                countdownSettings.classList.toggle('hidden', !isCountdown);
+
+                resetTimer();
+            });
+        });
+
+        updateDisplay();
     }
 
     // DOMContentLoaded後に初期化
