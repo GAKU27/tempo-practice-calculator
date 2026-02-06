@@ -193,24 +193,46 @@
         start() {
             if (this.isPlaying) return;
 
+            // iOS Safari: AudioContextを作成/再開
             if (!this.audioContext) {
                 this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             }
 
-            // iOS Safari requires resume after user gesture
-            if (this.audioContext.state === 'suspended') {
-                this.audioContext.resume().then(() => {
+            // iOS Safari requires unlock via user gesture
+            const unlockAudio = () => {
+                if (this.audioContext.state === 'suspended') {
+                    return this.audioContext.resume();
+                }
+                return Promise.resolve();
+            };
+
+            // iOSでは無音を再生してオーディオをウォームアップ
+            const warmupAudio = () => {
+                const buffer = this.audioContext.createBuffer(1, 1, 22050);
+                const source = this.audioContext.createBufferSource();
+                source.buffer = buffer;
+                source.connect(this.audioContext.destination);
+                source.start(0);
+            };
+
+            unlockAudio()
+                .then(() => {
+                    warmupAudio();
+                    this._startPlayback();
+                })
+                .catch((err) => {
+                    console.log('Audio unlock failed:', err);
+                    // 再試行
                     this._startPlayback();
                 });
-            } else {
-                this._startPlayback();
-            }
         }
 
         _startPlayback() {
+            if (!this.audioContext) return;
             this.isPlaying = true;
             this.currentBeatInBar = 0;
-            this.nextNoteTime = this.audioContext.currentTime + 0.05;
+            this.currentSubdivision = 0;
+            this.nextNoteTime = this.audioContext.currentTime + 0.1;
             this.scheduler();
         }
 
