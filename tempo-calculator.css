@@ -1351,15 +1351,15 @@ body {
 
 [data-theme="light"] .card,
 [data-theme="light"] .glass-card {
-    background: #ffffff;
-    border: 1px solid #d1d5db;
+    background: transparent;
+    border: none;
     border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: none;
 }
 
 [data-theme="light"] .card:hover,
 [data-theme="light"] .glass-card:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    box-shadow: none;
 }
 
 [data-theme="light"] .header {
