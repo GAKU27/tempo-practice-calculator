@@ -1410,11 +1410,12 @@ body {
 
 [data-theme="light"] .setting-select,
 [data-theme="light"] .setting-input {
-    background: #f9fafb;
+    background: #ffffff;
     border: 1px solid #d1d5db;
-    border-radius: 12px;
+    border-radius: 25px;
     color: #111827;
-    padding: 12px 16px;
+    padding: 14px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 [data-theme="light"] .setting-select:focus,
