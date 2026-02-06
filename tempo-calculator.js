@@ -8,23 +8,7 @@
 (function () {
     'use strict';
 
-    // Navigation Elements
-    const menuBtn = document.getElementById('menu-btn');
-    const closeMenuBtn = document.getElementById('close-menu-btn');
-    const navMenu = document.getElementById('nav-menu');
-    const navOverlay = document.getElementById('nav-overlay');
-    const navItems = document.querySelectorAll('.nav-item');
-    const viewSections = document.querySelectorAll('.view-section');
-
-    // Metronome Elements
-    const bpmDisplay = document.getElementById('bpm-display');
-    const bpmSlider = document.getElementById('bpm-slider');
-    const bpmIncrease = document.getElementById('bpm-increase');
-    const bpmDecrease = document.getElementById('bpm-decrease');
-    const playBtn = document.getElementById('metronome-play-btn');
-    const tapBtn = document.getElementById('tap-tempo-btn');
-    const timeSignatureSelect = document.getElementById('time-signature-select');
-    const visualCircle = document.getElementById('visual-circle');
+    // Navigation Elements & Metronome Elements will be initialized in setup functions
 
     /**
      * Web Audio API Metronome Engine
@@ -146,13 +130,34 @@
      * Navigation Logic
      */
     function setupNavigation() {
+        // DOM Elements for Navigation
+        const menuBtn = document.getElementById('menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const navMenu = document.getElementById('nav-menu');
+        const navOverlay = document.getElementById('nav-overlay');
+        const navItems = document.querySelectorAll('.nav-item');
+        const viewSections = document.querySelectorAll('.view-section');
+        const playBtn = document.getElementById('metronome-play-btn');
+
+        if (!menuBtn || !navMenu || !navOverlay) {
+            console.error('Navigation elements not found. Check HTML IDs.');
+            return;
+        }
+
         const toggleMenu = () => {
             navMenu.classList.toggle('active');
             navOverlay.classList.toggle('active');
         };
 
-        menuBtn.addEventListener('click', toggleMenu);
-        closeMenuBtn.addEventListener('click', toggleMenu);
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        if (closeMenuBtn) {
+            closeMenuBtn.addEventListener('click', toggleMenu);
+        }
+
         navOverlay.addEventListener('click', toggleMenu);
 
         navItems.forEach(item => {
@@ -190,6 +195,19 @@
      * Metronome Controls Logic
      */
     function setupMetronome() {
+        const bpmDisplay = document.getElementById('bpm-display');
+        const bpmSlider = document.getElementById('bpm-slider');
+        const bpmIncrease = document.getElementById('bpm-increase');
+        const bpmDecrease = document.getElementById('bpm-decrease');
+        const playBtn = document.getElementById('metronome-play-btn');
+        const tapBtn = document.getElementById('tap-tempo-btn');
+        const timeSignatureSelect = document.getElementById('time-signature-select');
+
+        if (!bpmDisplay || !bpmSlider || !playBtn) {
+            console.error('Metronome elements not found');
+            return;
+        }
+
         // Tempo Change (Slider & Buttons)
         const updateTempo = (bpm) => {
             let newBpm = Math.min(Math.max(bpm, 30), 250); // Clamp 30-250
