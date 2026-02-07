@@ -859,6 +859,7 @@
         initTouchPrevention();
         initThemeManager();
         initDeleteButton();
+        initPracticeRecords();
 
         console.log('Tempo Practice Calculator (Enhanced TypeScript Edition) initialized');
     }
@@ -1056,6 +1057,207 @@
         deleteBtn.addEventListener('mousedown', startHold);
         deleteBtn.addEventListener('mouseup', cancelHold);
         deleteBtn.addEventListener('mouseleave', cancelHold);
+    }
+
+    // ========================================
+    // 練習記録システム
+    // ========================================
+    const PRACTICE_RECORDS_KEY = 'tpc_practice_records';
+    const MAX_RECORDS = 50;
+    let currentSessionStart = null;
+    let currentSessionTempo = null;
+
+    /**
+     * 練習記録を初期化
+     */
+    function initPracticeRecords() {
+        renderPracticeRecords();
+
+        // メトロノームの再生・停止をフック
+        hookMetronomeEvents();
+    }
+
+    /**
+     * メトロノームの再生・停止イベントをフック
+     */
+    function hookMetronomeEvents() {
+        const playBtn = document.getElementById('metronome-play-btn');
+        if (!playBtn) return;
+
+        // 既存のクリックイベントをラップ
+        const originalClick = playBtn.onclick;
+
+        playBtn.addEventListener('click', () => {
+            // メトロノームの状態を確認して記録
+            setTimeout(() => {
+                if (metronome.isPlaying) {
+                    // 再生開始
+                    startPracticeSession();
+                } else {
+                    // 停止
+                    endPracticeSession();
+                }
+            }, 50);
+        });
+    }
+
+    /**
+     * 練習セッション開始
+     */
+    function startPracticeSession() {
+        currentSessionStart = Date.now();
+        currentSessionTempo = metronome.tempo;
+        console.log('[Practice] Session started:', currentSessionTempo, 'BPM');
+    }
+
+    /**
+     * 練習セッション終了（記録保存）
+     */
+    function endPracticeSession() {
+        if (!currentSessionStart) return;
+
+        const duration = Date.now() - currentSessionStart;
+        const minDuration = 5000; // 最低5秒以上で記録
+
+        if (duration >= minDuration) {
+            savePracticeRecord({
+                startTime: currentSessionStart,
+                duration: duration,
+                tempo: currentSessionTempo,
+                endTempo: metronome.tempo
+            });
+            console.log('[Practice] Session saved:', formatDuration(duration));
+        } else {
+            console.log('[Practice] Session too short, not saved');
+        }
+
+        currentSessionStart = null;
+        currentSessionTempo = null;
+    }
+
+    /**
+     * 練習記録を保存
+     */
+    function savePracticeRecord(record) {
+        const records = loadPracticeRecords();
+
+        records.unshift({
+            id: Date.now(),
+            timestamp: record.startTime,
+            duration: record.duration,
+            tempo: record.tempo,
+            endTempo: record.endTempo || record.tempo
+        });
+
+        // 最大件数を超えたら古いものを削除
+        while (records.length > MAX_RECORDS) {
+            records.pop();
+        }
+
+        try {
+            localStorage.setItem(PRACTICE_RECORDS_KEY, JSON.stringify(records));
+            renderPracticeRecords();
+        } catch (e) {
+            console.warn('Failed to save practice record:', e);
+        }
+    }
+
+    /**
+     * 練習記録を読み込み
+     */
+    function loadPracticeRecords() {
+        try {
+            const saved = localStorage.getItem(PRACTICE_RECORDS_KEY);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                return Array.isArray(parsed) ? parsed : [];
+            }
+        } catch (e) {
+            console.warn('Failed to load practice records:', e);
+        }
+        return [];
+    }
+
+    /**
+     * 練習記録を表示
+     */
+    function renderPracticeRecords() {
+        const listContainer = document.getElementById('records-list');
+        const countDisplay = document.getElementById('records-count');
+
+        if (!listContainer) return;
+
+        const records = loadPracticeRecords();
+
+        // 件数表示
+        if (countDisplay) {
+            countDisplay.textContent = `${records.length}件`;
+        }
+
+        if (records.length === 0) {
+            listContainer.innerHTML = `
+                <div class="records-empty">
+                    <div class="records-empty-icon">📝</div>
+                    <p>まだ練習記録がありません</p>
+                    <p>メトロノームを使用すると記録されます</p>
+                </div>
+            `;
+            return;
+        }
+
+        listContainer.innerHTML = records.map(record => `
+            <div class="record-item">
+                <div class="record-info">
+                    <span class="record-tempo">
+                        ♩ ${record.tempo}${record.endTempo && record.endTempo !== record.tempo ? ` → ${record.endTempo}` : ''} BPM
+                    </span>
+                    <span class="record-date">${formatRecordDate(record.timestamp)}</span>
+                </div>
+                <div class="record-duration">
+                    <span>${formatDuration(record.duration)}</span>
+                    <div class="record-duration-label">練習時間</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    /**
+     * 日付をフォーマット
+     */
+    function formatRecordDate(timestamp) {
+        const date = new Date(timestamp);
+        const now = new Date();
+        const diff = now - date;
+        const dayMs = 24 * 60 * 60 * 1000;
+
+        if (diff < dayMs) {
+            // 今日
+            return `今日 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        } else if (diff < 2 * dayMs) {
+            // 昨日
+            return `昨日 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        } else {
+            // それ以前
+            return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        }
+    }
+
+    /**
+     * 練習時間をフォーマット
+     */
+    function formatDuration(ms) {
+        const totalSeconds = Math.floor(ms / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        if (hours > 0) {
+            return `${hours}時間${minutes}分`;
+        } else if (minutes > 0) {
+            return `${minutes}分${seconds}秒`;
+        } else {
+            return `${seconds}秒`;
+        }
     }
 
     /**

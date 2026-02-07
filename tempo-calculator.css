@@ -2184,7 +2184,167 @@ textarea,
 }
 
 [data-theme="light"] .pendulum-container {
+    background: transparent;
+}
+
+/* Light Mode - Formula Display Fix */
+[data-theme="light"] .formula-display {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .formula {
+    color: var(--color-primary-dark);
+}
+
+[data-theme="light"] .formula-description {
+    color: #6e6e73;
+}
+
+/* Light Mode - Metronome Background Fix */
+[data-theme="light"] .metronome-app {
+    background: transparent;
+}
+
+[data-theme="light"] .card {
+    background: rgba(255, 255, 255, 0.85);
+}
+
+[data-theme="light"] .form-group-container {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .calculation-details {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .result-card {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .tip-box {
+    background: rgba(212, 184, 150, 0.15);
+    border-color: rgba(212, 184, 150, 0.3);
+}
+
+[data-theme="light"] .sound-notice {
+    background: rgba(245, 158, 11, 0.08);
+    border-color: rgba(245, 158, 11, 0.2);
+}
+
+/* ========================================
+   Practice Records
+   ======================================== */
+.practice-records {
+    margin-top: var(--space-lg);
+}
+
+.records-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+
+.records-title {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.records-count {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    background: rgba(99, 102, 241, 0.1);
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+}
+
+.records-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: var(--space-xs);
+}
+
+.record-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.record-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--color-border-light);
+}
+
+.record-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.record-tempo {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.record-date {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+.record-duration {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-primary-light);
+    text-align: right;
+}
+
+.record-duration-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+.records-empty {
+    text-align: center;
+    padding: var(--space-xl);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+}
+
+.records-empty-icon {
+    font-size: 2rem;
+    margin-bottom: var(--space-sm);
+    opacity: 0.5;
+}
+
+/* Light Mode - Practice Records */
+[data-theme="light"] .record-item {
     background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .record-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .records-count {
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--color-primary-dark);
 }
 
 /* ========================================
