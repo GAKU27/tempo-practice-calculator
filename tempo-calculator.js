@@ -854,7 +854,208 @@
         setupMetronome();
         setupTimer();
 
-        console.log('Tempo Practice Calculator (Simultaneous Metronome Edition) initialized');
+        // Initialize enhanced features
+        initDeviceIdentifier();
+        initTouchPrevention();
+        initThemeManager();
+        initDeleteButton();
+
+        console.log('Tempo Practice Calculator (Enhanced TypeScript Edition) initialized');
+    }
+
+    /**
+     * デバイス識別子の初期化
+     */
+    function initDeviceIdentifier() {
+        const STORAGE_KEY = 'tpc_device_id';
+        let deviceId = localStorage.getItem(STORAGE_KEY);
+
+        if (!deviceId) {
+            // UUID v4形式のIDを生成
+            if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+                deviceId = crypto.randomUUID();
+            } else {
+                deviceId = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+                    const r = (Math.random() * 16) | 0;
+                    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+                    return v.toString(16);
+                });
+            }
+            localStorage.setItem(STORAGE_KEY, deviceId);
+        }
+
+        // デバイスID表示を更新
+        const deviceIdDisplay = document.getElementById('device-id-display');
+        if (deviceIdDisplay) {
+            deviceIdDisplay.textContent = deviceId;
+        }
+
+        console.log('[TPC] Device ID:', deviceId);
+    }
+
+    /**
+     * タッチ操作の防止を初期化
+     */
+    function initTouchPrevention() {
+        // ピンチズーム禁止
+        document.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // ジェスチャー禁止（iOS Safari）
+        document.addEventListener('gesturestart', (e) => e.preventDefault());
+        document.addEventListener('gesturechange', (e) => e.preventDefault());
+        document.addEventListener('gestureend', (e) => e.preventDefault());
+
+        // ダブルタップズーム禁止
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, { passive: false });
+
+        // Ctrl+ホイールズーム禁止
+        document.addEventListener('wheel', (e) => {
+            if (e.ctrlKey) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // メニューのオーバースクロール対策
+        const navMenu = document.getElementById('nav-menu');
+        const navOverlay = document.getElementById('nav-overlay');
+        let touchStartY = 0;
+
+        if (navMenu) {
+            navMenu.addEventListener('touchstart', (e) => {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            navMenu.addEventListener('touchmove', (e) => {
+                const scrollable = navMenu.querySelector('.nav-list');
+                if (!scrollable) {
+                    e.preventDefault();
+                    return;
+                }
+
+                const currentY = e.touches[0].clientY;
+                const deltaY = currentY - touchStartY;
+                const atTop = scrollable.scrollTop <= 0;
+                const atBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight;
+
+                if ((atTop && deltaY > 0) || (atBottom && deltaY < 0)) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        }
+
+        if (navOverlay) {
+            navOverlay.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+        }
+    }
+
+    /**
+     * テーマ管理の初期化
+     */
+    function initThemeManager() {
+        const themeSelect = document.getElementById('theme-select');
+
+        // 保存されたテーマを読み込み
+        const savedTheme = localStorage.getItem('tpc_theme_mode') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        if (themeSelect) {
+            themeSelect.value = savedTheme;
+
+            themeSelect.addEventListener('change', (e) => {
+                const theme = e.target.value;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('tpc_theme_mode', theme);
+            });
+        }
+    }
+
+    /**
+     * 長押し削除ボタンの初期化
+     */
+    function initDeleteButton() {
+        const deleteBtn = document.getElementById('delete-all-btn');
+        const deleteProgress = document.getElementById('delete-progress');
+
+        if (!deleteBtn || !deleteProgress) return;
+
+        const HOLD_DURATION = 3000;
+        let holdStartTime = null;
+        let progressTimer = null;
+
+        const startHold = () => {
+            holdStartTime = Date.now();
+
+            deleteProgress.style.transition = 'none';
+            deleteProgress.style.width = '0%';
+            void deleteProgress.offsetWidth; // force reflow
+            deleteProgress.style.transition = `width ${HOLD_DURATION}ms linear`;
+            deleteProgress.style.width = '100%';
+
+            progressTimer = setTimeout(() => {
+                executeDelete();
+            }, HOLD_DURATION);
+        };
+
+        const cancelHold = () => {
+            if (progressTimer) {
+                clearTimeout(progressTimer);
+                progressTimer = null;
+            }
+
+            deleteProgress.style.transition = 'width 0.2s ease';
+            deleteProgress.style.width = '0%';
+            holdStartTime = null;
+        };
+
+        const executeDelete = () => {
+            // すべてのアプリデータを消去
+            const keysToDelete = [
+                'tpc_device_id',
+                'tpc_action_log',
+                'tpc_theme',
+                'tpc_theme_mode',
+                'tpc_settings',
+                'tpc_practice_records'
+            ];
+
+            keysToDelete.forEach(key => {
+                try { localStorage.removeItem(key); } catch (e) { }
+            });
+
+            // リロード
+            window.location.reload();
+        };
+
+        // タッチイベント
+        deleteBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            startHold();
+        }, { passive: false });
+
+        deleteBtn.addEventListener('touchend', cancelHold);
+        deleteBtn.addEventListener('touchcancel', cancelHold);
+
+        // マウスイベント
+        deleteBtn.addEventListener('mousedown', startHold);
+        deleteBtn.addEventListener('mouseup', cancelHold);
+        deleteBtn.addEventListener('mouseleave', cancelHold);
     }
 
     /**

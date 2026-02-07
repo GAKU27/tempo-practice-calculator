@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Tempo Practice Calculator | テンポ練習時間計算機</title>
     <meta name="description" content="段階的テンポ上昇トレーニングの総所要時間を高精度に算出するツール">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -325,6 +326,9 @@
                             </button>
                         </div>
 
+                        <!-- iPhone注意書き -->
+                        <p class="sound-notice">📱 iPhoneの場合、消音モード（マナーモード）を解除してください</p>
+
                         <!-- Pendulum -->
                         <div class="pendulum-container">
                             <div class="pendulum-arm" id="pendulum-arm">
@@ -528,6 +532,28 @@
                                     <option value="dark">ダーク</option>
                                     <option value="light">ライト</option>
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="setting-group">
+                            <h4>📱 デバイス情報</h4>
+                            <div class="setting-item device-info">
+                                <label>デバイスID</label>
+                                <code id="device-id-display" class="device-id">読み込み中...</code>
+                            </div>
+                        </div>
+
+                        <div class="setting-group danger-zone">
+                            <h4>⚠️ デンジャーゾーン</h4>
+                            <div class="setting-item">
+                                <p class="danger-description">
+                                    すべてのデータ（識別ID、練習記録、ログ）を完全に消去します。
+                                    この操作は取り消せません。
+                                </p>
+                                <button type="button" id="delete-all-btn" class="delete-btn">
+                                    <span class="delete-progress" id="delete-progress"></span>
+                                    <span class="delete-text">🗑️ 全データを消去（3秒長押し）</span>
+                                </button>
                             </div>
                         </div>
                     </div>
