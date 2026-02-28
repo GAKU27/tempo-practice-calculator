@@ -31,6 +31,7 @@ import { MetronomeUI } from './ui/MetronomeUI';
 import { TimerUI } from './ui/TimerUI';
 import { PracticeRecordsUI } from './ui/PracticeRecordsUI';
 import { NavigationManager } from './ui/NavigationManager';
+import { VisualEffects } from './ui/VisualEffects';
 
 /**
  * アプリケーション初期化
@@ -54,6 +55,9 @@ export function initializeApp(): void {
     const themeManager = ThemeManager.getInstance();
     themeManager.applyTheme();
     themeManager.initUI();
+
+    // 視覚エフェクト（波紋・パララックス）を初期化
+    VisualEffects.init();
 
     // 削除ボタンを初期化（存在する場合）
     const deleteBtn = document.getElementById('delete-all-btn');

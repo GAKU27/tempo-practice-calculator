@@ -100,9 +100,9 @@ export class CalculatorUI {
         const { exactSeconds, approxSeconds, errorRate } = result.results;
         const { actualEndTempo, totalBeatsPerStep } = result.metadata;
 
-        // Animate numbers for polished feel
-        this.animateNumber(this.totalTimeDisplay, null, formatTime(exactSeconds));
-        this.animateNumber(this.totalTimeSecondsDisplay, exactSeconds, null, ' 秒');
+        // Animate numbers for polished feel (Slot machine effect)
+        this.animateNumber(this.totalTimeDisplay, exactSeconds, formatTime);
+        this.animateNumber(this.totalTimeSecondsDisplay, exactSeconds, (v) => v.toFixed(1) + ' 秒');
 
         // Update details
         if (this.actualEndTempoDisplay) this.actualEndTempoDisplay.textContent = `${actualEndTempo} BPM`;
@@ -157,40 +157,41 @@ export class CalculatorUI {
         }, 3000);
     }
 
-    private animateNumber(element: HTMLElement | null, finalNumber: number | null, textValue: string | null = null, suffix: string = '') {
+    private animateNumber(element: HTMLElement | null, targetValue: number, formatter: (val: number) => string) {
         if (!element) return;
 
         element.style.opacity = '0';
         element.style.transform = 'translateY(-10px)';
+        element.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+
+        // Reset text
+        element.textContent = formatter(0);
 
         setTimeout(() => {
-            if (textValue !== null) {
-                element.textContent = textValue;
-            } else if (finalNumber !== null) {
-                // Number increasing animation
-                let current = 0;
-                const duration = 500;
-                const steps = 20;
-                const step = finalNumber / steps;
-                const stepTime = duration / steps;
-
-                let counter = 0;
-                const timer = setInterval(() => {
-                    counter++;
-                    current += step;
-
-                    if (counter >= steps) {
-                        element.textContent = finalNumber.toFixed(1) + suffix;
-                        clearInterval(timer);
-                    } else {
-                        element.textContent = current.toFixed(1) + suffix;
-                    }
-                }, stepTime);
-            }
-
-            element.style.transition = 'all 0.4s ease';
             element.style.opacity = '1';
             element.style.transform = 'translateY(0)';
+
+            const duration = 800; // 800ms animation
+            const startTime = performance.now();
+
+            const updateNumber = (currentTime: number) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Ease out expo (fast start, slow end)
+                const easeOut = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+
+                const currentValue = targetValue * easeOut;
+                element.textContent = formatter(currentValue);
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateNumber);
+                } else {
+                    element.textContent = formatter(targetValue); // Ensure precise final value
+                }
+            };
+
+            requestAnimationFrame(updateNumber);
         }, 50);
     }
 }
