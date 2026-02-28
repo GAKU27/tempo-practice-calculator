@@ -51,7 +51,9 @@ export function initializeApp(): void {
     TouchController.getInstance().init();
 
     // テーマを適用
-    ThemeManager.getInstance().applyTheme();
+    const themeManager = ThemeManager.getInstance();
+    themeManager.applyTheme();
+    themeManager.initUI();
 
     // 削除ボタンを初期化（存在する場合）
     const deleteBtn = document.getElementById('delete-all-btn');

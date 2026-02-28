@@ -166,6 +166,22 @@ export class ThemeManager {
     }
 
     /**
+     * UI要素とのバインディングを初期化
+     */
+    initUI(): void {
+        const themeSelect = document.getElementById('theme-select') as HTMLSelectElement;
+        if (themeSelect) {
+            // 初期値をUIに反映
+            themeSelect.value = this.currentMode;
+
+            // 変更イベントを監視
+            themeSelect.addEventListener('change', (e) => {
+                this.setMode((e.target as HTMLSelectElement).value as ThemeMode);
+            });
+        }
+    }
+
+    /**
      * 背景色をカスタム設定し、他の色を自動計算
      */
     setBackgroundColor(bgColor: string): void {
