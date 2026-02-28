@@ -1,0 +1,263 @@
+// _utilities.scss
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+/* ========================================
+   Device Info & Danger Zone
+   ======================================== */
+.device-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.device-id {
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-size: var(--font-size-xs);
+    background: rgba(30, 36, 48, 0.9);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    color: var(--color-primary-light);
+    word-break: break-all;
+    display: block;
+}
+
+.danger-zone {
+    margin-top: var(--space-lg);
+    padding-top: var(--space-lg);
+    border-top: 1px solid rgba(239, 68, 68, 0.3);
+
+    h4 {
+        color: #ef4444;
+    }
+}
+
+.danger-description {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+    line-height: 1.6;
+}
+
+.delete-btn {
+    position: relative;
+    width: 100%;
+    padding: var(--space-md) var(--space-lg);
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-md);
+    color: #fca5a5;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all var(--transition-fast);
+
+    &:hover {
+        background: rgba(239, 68, 68, 0.15);
+        border-color: rgba(239, 68, 68, 0.5);
+    }
+
+    &:active {
+        background: rgba(239, 68, 68, 0.2);
+    }
+}
+
+.delete-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, rgba(239, 68, 68, 0.3), rgba(239, 68, 68, 0.5));
+    pointer-events: none;
+    z-index: 0;
+}
+
+.delete-text {
+    position: relative;
+    z-index: 1;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Tablet (768px - 1024px) */
+@media screen and (max-width: 1024px) {
+    .app-container {
+        padding: var(--space-lg);
+    }
+
+    .form-row {
+        gap: var(--space-md);
+    }
+
+    .result-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Mobile (max-width: 768px) */
+@media screen and (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+
+    .app-container {
+        padding: var(--space-md);
+    }
+
+    .glass-card {
+        padding: var(--space-lg);
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    .result-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .logo-text {
+        font-size: var(--font-size-xl);
+    }
+
+    .bpm-display {
+        font-size: 3rem;
+    }
+
+    .play-btn {
+        width: 70px;
+        height: 70px;
+        font-size: 1.5rem;
+    }
+
+    .metronome-controls {
+        max-width: 100%;
+    }
+
+    .setting-row {
+        flex-direction: column;
+    }
+
+    .pendulum-container {
+        height: 180px;
+    }
+
+    .pendulum-arm {
+        height: 100px;
+    }
+}
+
+/* Small Mobile (max-width: 480px) */
+@media screen and (max-width: 480px) {
+    html {
+        font-size: 13px;
+    }
+
+    .header {
+        padding: var(--space-lg) 0;
+    }
+
+    .logo {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+
+    .logo-icon {
+        width: 48px;
+        height: 48px;
+    }
+
+    .calculate-btn {
+        width: 100%;
+    }
+
+    .play-controls {
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+
+    .nav-menu {
+        width: 90%;
+    }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .orb {
+        animation: none;
+    }
+
+    .pendulum-arm {
+        transition: none;
+    }
+}
+
+/* Focus Visible for Keyboard Navigation */
+*:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+}
+
+/* ========================================
+   Touch Control - Pinch Zoom Prevention
+   ======================================== */
+html,
+body {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Allow text selection in specific areas */
+input,
+textarea,
+.selectable {
+    -webkit-user-select: text;
+    user-select: text;
+}
+
+/* Menu overscroll prevention */
+.nav-menu {
+    overscroll-behavior: contain;
+
+    &.active {
+        touch-action: pan-y;
+    }
+}
+
+.nav-overlay {
+    overscroll-behavior: none;
+    touch-action: none;
+}

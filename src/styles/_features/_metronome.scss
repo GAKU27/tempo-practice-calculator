@@ -1,0 +1,287 @@
+// _features/_metronome.scss
+
+.metronome-app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xl);
+    padding: var(--space-md);
+}
+
+.bpm-display-area {
+    text-align: center;
+}
+
+.bpm-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    letter-spacing: 0.2em;
+}
+
+.bpm-value {
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--text-color, var(--color-text-primary));
+    line-height: 1;
+    margin: var(--space-xs) 0;
+    font-feature-settings: "tnum";
+    text-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+}
+
+.bpm-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-primary-light);
+    font-style: italic;
+}
+
+.metronome-visual {
+    width: 200px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: var(--space-md) 0;
+}
+
+.visual-circle {
+    width: 24px;
+    height: 24px;
+    background: var(--color-text-muted);
+    border-radius: 50%;
+    transition: transform 0.08s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        background 0.08s ease,
+        box-shadow 0.08s ease;
+
+    &.beat {
+        transform: scale(1.8);
+        background: var(--color-primary-light);
+        box-shadow: 0 0 20px var(--color-primary), 0 0 40px rgba(99, 102, 241, 0.3);
+        animation: pulse-beat 0.15s ease-out;
+    }
+
+    &.accent {
+        transform: scale(2.2);
+        background: var(--color-accent);
+        box-shadow: 0 0 25px var(--color-accent), 0 0 50px rgba(236, 72, 153, 0.4);
+        animation: pulse-accent 0.2s ease-out;
+    }
+
+    &.sub-beat {
+        transform: scale(1.3);
+        background: var(--color-text-muted);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    }
+}
+
+@keyframes pulse-beat {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(2);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.8);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse-accent {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(2.5);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(2.2);
+        opacity: 1;
+    }
+}
+
+/* Sound Notice */
+.sound-notice {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    text-align: center;
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: var(--radius-md);
+    margin-top: var(--space-md);
+}
+
+.metronome-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    width: 100%;
+    max-width: 400px;
+}
+
+.bpm-slider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    outline: none;
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        background: var(--color-primary);
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+    }
+}
+
+.play-controls {
+    display: flex;
+    gap: var(--space-lg);
+    align-items: center;
+}
+
+.play-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(99, 102, 241, 0.5);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+
+    &.playing {
+        background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+
+        .btn-icon::before {
+            content: "II";
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .btn-icon {
+            font-size: 0;
+
+            &::before {
+                font-size: 1.5rem;
+            }
+        }
+    }
+}
+
+.tap-btn {
+    padding: var(--space-md) var(--space-lg);
+    background: transparent;
+    border: 1px solid var(--border-color, var(--color-border));
+    border-radius: var(--radius-full);
+    color: var(--color-text-muted);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:active {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-color, var(--color-text-primary));
+        transform: scale(0.95);
+    }
+}
+
+.metronome-settings {
+    width: 100%;
+    max-width: 350px;
+}
+
+.setting-row {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.setting-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    min-width: 120px;
+
+    label {
+        font-size: var(--font-size-xs);
+        color: var(--color-text-muted);
+        text-align: center;
+    }
+}
+
+.setting-input {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: #1e293b;
+    border: 1px solid var(--border-color, var(--color-border));
+    border-radius: var(--radius-md);
+    color: var(--text-color, var(--color-text-primary));
+    font-size: var(--font-size-base);
+    text-align: center;
+    transition: all var(--transition-fast);
+
+    &:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+}
+
+.tap-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.tap-hint {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    text-align: center;
+    max-width: 120px;
+    line-height: 1.3;
+}
+
+.setting-select {
+    width: 100%;
+    padding: var(--space-sm);
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid var(--border-color, var(--color-border));
+    border-radius: var(--radius-md);
+    color: var(--text-color, var(--color-text-primary));
+    font-size: var(--font-size-base);
+    text-align: center;
+    cursor: pointer;
+}
