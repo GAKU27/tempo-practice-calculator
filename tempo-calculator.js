@@ -10,13 +10,9 @@
 
     // DOM Elements - will be set in init()
     let form, resultsSection;
-    let totalTimeDisplay, totalTimeSecondsDisplay, stepCountDisplay;
-    let actualEndTempoDisplay, exactTimeDisplay, approxTimeDisplay;
-    let errorRateDisplay, totalBeatsPerStepDisplay;
+    let totalTimeDisplay, totalTimeSecondsDisplay;
+    let actualEndTempoDisplay, totalBeatsPerStepDisplay;
 
-    /**
-     * Web Audio API Metronome Engine
-     */
     class Metronome {
         constructor() {
             this.audioContext = null;
@@ -36,14 +32,6 @@
             this.pendulumEnabled = true;
             this.pendulumDirection = 'left';
             this.pendulumArm = null;
-
-            // 漸進テンポ
-            this.progressionEnabled = false;
-            this.progressionStep = 5; // BPM per step
-            this.progressionBars = 8; // bars before step up
-            this.targetTempo = 180;
-            this.barCount = 0;
-            this.onTempoChange = null; // callback
         }
 
         nextNote() {
@@ -58,19 +46,6 @@
                 this.currentBeatInBar++;
                 if (this.currentBeatInBar >= this.beatsPerBar) {
                     this.currentBeatInBar = 0;
-
-                    // 漸進テンポ: 小節カウント
-                    if (this.progressionEnabled) {
-                        this.barCount++;
-                        if (this.barCount >= this.progressionBars && this.tempo < this.targetTempo) {
-                            this.barCount = 0;
-                            const newTempo = Math.min(this.tempo + this.progressionStep, this.targetTempo);
-                            this.tempo = newTempo;
-                            if (this.onTempoChange) {
-                                this.onTempoChange(newTempo);
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -570,125 +545,38 @@
                 document.documentElement.setAttribute('data-theme', e.target.value);
             });
         }
-
-        // Tempo Progression
-        const progressionSelect = document.getElementById('tempo-progression-select');
-        const tempoStepSlider = document.getElementById('tempo-step-slider');
-        const tempoStepValue = document.getElementById('tempo-step-value');
-        const tempoBarSlider = document.getElementById('tempo-bar-slider');
-        const tempoBarValue = document.getElementById('tempo-bar-value');
-        const targetTempoSlider = document.getElementById('target-tempo-slider');
-        const targetTempoValue = document.getElementById('target-tempo-value');
-
-        if (progressionSelect) {
-            progressionSelect.addEventListener('change', (e) => {
-                metronome.progressionEnabled = e.target.value === 'on';
-                metronome.barCount = 0;
-            });
-        }
-
-        if (tempoStepSlider && tempoStepValue) {
-            tempoStepSlider.addEventListener('input', (e) => {
-                const value = parseInt(e.target.value);
-                metronome.progressionStep = value;
-                tempoStepValue.textContent = value;
-            });
-        }
-
-        if (tempoBarSlider && tempoBarValue) {
-            tempoBarSlider.addEventListener('input', (e) => {
-                const value = parseInt(e.target.value);
-                metronome.progressionBars = value;
-                tempoBarValue.textContent = value;
-            });
-        }
-
-        // Target tempo input
-        const targetTempoInput = document.getElementById('target-tempo-input');
-        if (targetTempoInput) {
-            targetTempoInput.addEventListener('input', (e) => {
-                const value = parseInt(e.target.value) || 180;
-                metronome.targetTempo = Math.max(30, Math.min(300, value));
-            });
-        }
-
-        // Tempo change callback from progression
-        metronome.onTempoChange = (newTempo) => {
-            updateTempo(newTempo);
-        };
     }
 
     /**
-     * 高精度総和計算（Kahan Summationアルゴリズム）
-     */
-    function kahanSum(numbers) {
-        let sum = 0.0;
-        let compensation = 0.0;
-
-        for (let i = 0; i < numbers.length; i++) {
-            const y = numbers[i] - compensation;
-            const t = sum + y;
-            compensation = (t - sum) - y;
-            sum = t;
-        }
-
-        return sum;
-    }
-
-    /**
-     * メイン計算関数
+     * 計算ロジック
      */
     function calculateTempoPracticeTime(params) {
-        const { a, b, s, B, R, N } = params;
+        const { a, b, B, R } = params;
 
-        if (s <= 0) {
-            throw new Error('ステップ幅は正の値である必要があります');
+        // Validation
+        if (a <= 0 || b <= 0 || B <= 0 || R <= 0) {
+            throw new Error("Parameters must be positive.");
         }
-        if (a <= 0 || b <= 0) {
-            throw new Error('テンポは正の値である必要があります');
-        }
-        if (a >= b) {
-            throw new Error('目標テンポは開始テンポより大きく設定してください');
-        }
-        if (B <= 0 || R <= 0 || N <= 0) {
-            throw new Error('拍数、反復回数、セット数は正の整数である必要があります');
-        }
-
-        const K = B * R;
-        const n = Math.floor((b - a) / s);
-        const bPrime = a + n * s;
-        const C = 60 * K;
-
-        const stepTimes = [];
-        for (let k = 0; k <= n; k++) {
-            const tempo = a + s * k;
-            const stepTime = C / tempo;
-            stepTimes.push(stepTime);
+        
+        // Ensure accurate stepping (if a > b, we still calculate the range but absolute value)
+        const start = Math.min(a, b);
+        const end = Math.max(a, b);
+        
+        let sumExact = 0;
+        const C = 60 * B * R; // Time constant per step
+        
+        for (let k = start; k <= end; k++) {
+            sumExact += C / k;
         }
 
-        const sumExact = kahanSum(stepTimes);
-        const totalExact = sumExact * N;
-
-        const S = a + bPrime;
-        const P = a * bPrime;
-        const termIntegral = (4 * n * S) / (S * S + 4 * P);
-        const termCorrection = S / (2 * P);
-        const sumApprox = C * (termIntegral + termCorrection);
-        const totalApprox = sumApprox * N;
-        const errorRate = ((totalApprox - totalExact) / totalExact) * 100;
+        const totalExact = sumExact;
 
         return {
-            results: {
-                exactSeconds: totalExact,
-                approxSeconds: totalApprox,
-                errorRate: errorRate
-            },
-            metadata: {
-                nSteps: n,
-                actualEndTempo: bPrime,
-                totalBeatsPerStep: K,
-                timeConstantC: C,
-                inputParams: { a, b, s, B, R, N }
+            results: { exactSeconds: totalExact },
+            metadata: { 
+                actualEndTempo: b, 
+                totalBeatsPerStep: B * R, 
+                inputParams: params 
             }
         };
     }
@@ -705,27 +593,6 @@
             return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
         return `${minutes}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    /**
-     * 結果を画面に表示
-     */
-    function displayResults(data) {
-        const { results, metadata } = data;
-
-        totalTimeDisplay.textContent = formatTime(results.exactSeconds);
-        totalTimeSecondsDisplay.textContent = `${results.exactSeconds.toFixed(2)} 秒`;
-
-        stepCountDisplay.textContent = metadata.nSteps;
-        actualEndTempoDisplay.textContent = metadata.actualEndTempo;
-
-        exactTimeDisplay.textContent = `${results.exactSeconds.toFixed(4)} 秒`;
-        approxTimeDisplay.textContent = `${results.approxSeconds.toFixed(4)} 秒`;
-        errorRateDisplay.textContent = `${results.errorRate >= 0 ? '+' : ''}${results.errorRate.toFixed(4)}%`;
-        totalBeatsPerStepDisplay.textContent = `${metadata.totalBeatsPerStep} 拍`;
-
-        resultsSection.classList.remove('hidden');
-        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     /**
@@ -764,6 +631,128 @@
     }
 
     /**
+     * 結果を画面に表示
+     */
+    function displayResults(data) {
+        const { results, metadata } = data;
+
+        totalTimeDisplay.textContent = formatTime(results.exactSeconds);
+        totalTimeSecondsDisplay.textContent = `${results.exactSeconds.toFixed(2)} 秒`;
+        
+        if (actualEndTempoDisplay) {
+            actualEndTempoDisplay.textContent = metadata.actualEndTempo;
+        }
+
+        resultsSection.classList.remove('hidden');
+        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // 保存ボタンの設定
+        const saveBtn = document.getElementById('save-record-btn');
+        if (saveBtn) {
+            saveBtn.onclick = () => savePracticeRecord(data);
+        }
+    }
+
+    /**
+     * 時間フォーマット（秒 -> MM:SS）
+     */
+    function formatTime(totalSeconds) {
+        const h = Math.floor(totalSeconds / 3600);
+        const m = Math.floor((totalSeconds % 3600) / 60);
+        const s = Math.floor(totalSeconds % 60);
+        
+        if (h > 0) {
+            return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    /**
+     * 練習記録を保存
+     */
+    function savePracticeRecord(data) {
+        const STORAGE_KEY = 'tpc_practice_records';
+        let records = [];
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                records = JSON.parse(saved);
+            }
+        } catch (e) {
+            console.error('Failed to parse practice records');
+        }
+
+        const now = new Date();
+        const record = {
+            id: 'rec_' + now.getTime(),
+            date: now.toISOString(),
+            params: data.metadata.inputParams,
+            timeSeconds: data.results.exactSeconds
+        };
+
+        records.unshift(record); // 最新を先頭に
+        if (records.length > 50) records.length = 50; // 最大50件
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+        
+        alert('練習記録を保存しました！\n左のメニューの「練習記録」から確認できます。');
+        renderPracticeRecords(); // 画面更新
+    }
+
+    /**
+     * 練習記録を表示
+     */
+    function renderPracticeRecords() {
+        const container = document.getElementById('records-list-container');
+        if (!container) return;
+
+        const STORAGE_KEY = 'tpc_practice_records';
+        let records = [];
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                records = JSON.parse(saved);
+            }
+        } catch (e) {}
+
+        if (records.length === 0) {
+            container.innerHTML = '<p class="empty-state">まだ練習記録がありません。<br>計算機で時間を計算し、保存ボタンを押してください。</p>';
+            return;
+        }
+
+        container.innerHTML = records.map(record => {
+            const d = new Date(record.date);
+            const dateStr = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const p = record.params;
+            return `
+                <div class="record-card">
+                    <div class="record-header">
+                        <span class="record-date">${dateStr}</span>
+                        <span class="record-time">${formatTime(record.timeSeconds)}</span>
+                    </div>
+                    <div class="record-details">
+                        <span>テンポ: ${p.a} → ${p.b}</span>
+                        <span>構造: ${p.B}拍 × ${p.R}回</span>
+                    </div>
+                    <button class="delete-record-btn" onclick="deletePracticeRecord('${record.id}')">削除</button>
+                </div>
+            `;
+        }).join('');
+    }
+
+    window.deletePracticeRecord = function(id) {
+        if (!confirm('この記録を削除しますか？')) return;
+        const STORAGE_KEY = 'tpc_practice_records';
+        let records = [];
+        try {
+            records = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            records = records.filter(r => r.id !== id);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+            renderPracticeRecords();
+        } catch(e) {}
+    };
+
+    /**
      * フォーム送信ハンドラ
      */
     function handleSubmit(e) {
@@ -773,10 +762,8 @@
         const params = {
             a: parseFloat(formData.get('startTempo')),
             b: parseFloat(formData.get('endTempo')),
-            s: parseFloat(formData.get('stepSize')),
             B: parseInt(formData.get('beatsPerPhrase'), 10),
-            R: parseInt(formData.get('repetitions'), 10),
-            N: parseInt(formData.get('sets'), 10)
+            R: parseInt(formData.get('repetitions'), 10)
         };
 
         try {
@@ -835,11 +822,7 @@
         resultsSection = document.getElementById('results-section');
         totalTimeDisplay = document.getElementById('totalTime');
         totalTimeSecondsDisplay = document.getElementById('totalTimeSeconds');
-        stepCountDisplay = document.getElementById('stepCount');
         actualEndTempoDisplay = document.getElementById('actualEndTempo');
-        exactTimeDisplay = document.getElementById('exactTime');
-        approxTimeDisplay = document.getElementById('approxTime');
-        errorRateDisplay = document.getElementById('errorRate');
         totalBeatsPerStepDisplay = document.getElementById('totalBeatsPerStep');
 
         if (form) {
@@ -859,6 +842,7 @@
         initTouchPrevention();
         initThemeManager();
         initDeleteButton();
+        renderPracticeRecords();
 
         console.log('Tempo Practice Calculator (Enhanced TypeScript Edition) initialized');
     }
