@@ -1,0 +1,13 @@
+{
+    "name": "tempo-practice-calculator",
+    "version": "1.0.0",
+    "description": "Tempo Practice Calculator",
+    "scripts": {
+        "build": "esbuild src/main.ts --bundle --outfile=dist/bundle.js --target=es2020 --minify --sourcemap",
+        "dev": "esbuild src/main.ts --bundle --outfile=dist/bundle.js --target=es2020 --sourcemap --watch"
+    },
+    "devDependencies": {
+        "esbuild": "^0.20.0",
+        "typescript": "^5.3.0"
+    }
+}

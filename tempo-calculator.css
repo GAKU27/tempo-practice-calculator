@@ -2157,6 +2157,10 @@ textarea,
     border-color: rgba(0, 0, 0, 0.08);
 }
 
+[data-theme="light"] .formula {
+    color: var(--color-primary-dark);
+}
+
 [data-theme="light"] .nav-menu {
     background: rgba(255, 255, 255, 0.95);
     border-color: rgba(0, 0, 0, 0.1);
@@ -2184,7 +2188,7 @@ textarea,
 }
 
 [data-theme="light"] .pendulum-container {
-    background: rgba(0, 0, 0, 0.02);
+    background: transparent;
 }
 
 /* ========================================
@@ -2193,123 +2197,6 @@ textarea,
 :root {
     --bg-color: #0f0f1a;
     --border-color: #2a2a4a;
+    --text-color: #ffffff;
     --accent-color: #8b5cf6;
-}
-
-/* ========================================
-   Practice Records
-   ======================================== */
-.records-container {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-    margin-top: var(--space-md);
-    max-height: 400px;
-    overflow-y: auto;
-    padding-right: var(--space-sm);
-}
-
-.record-card {
-    background: rgba(30, 36, 48, 0.6);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: var(--space-md);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-    position: relative;
-    transition: transform var(--transition-fast);
-}
-
-.record-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--color-primary-light);
-}
-
-.record-header {
-    display: flex;
-    flex-direction: column;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding-bottom: var(--space-xs);
-    margin-bottom: var(--space-xs);
-}
-
-.record-date {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-}
-
-.record-time {
-    font-size: var(--font-size-lg);
-    font-weight: 700;
-    color: var(--color-primary-light);
-    font-variant-numeric: tabular-nums;
-    margin-top: var(--space-xs);
-}
-
-.record-details {
-    display: flex;
-    justify-content: space-between;
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-}
-
-.delete-record-btn {
-    position: absolute;
-    top: var(--space-sm);
-    right: var(--space-sm);
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: #ef4444;
-    font-size: var(--font-size-xs);
-    cursor: pointer;
-    padding: 2px 8px;
-    border-radius: var(--radius-sm);
-    transition: all var(--transition-fast);
-}
-
-.delete-record-btn:hover {
-    background: #ef4444;
-    color: #fff;
-}
-
-.empty-state {
-    text-align: center;
-    color: var(--color-text-muted);
-    font-size: var(--font-size-sm);
-    padding: var(--space-xl) 0;
-    line-height: 1.6;
-}
-
-/* Light Mode Overrides for new elements and fixes */
-[data-theme="light"] .record-card {
-    background: rgba(255, 255, 255, 0.9);
-    border-color: rgba(0, 0, 0, 0.1);
-}
-
-[data-theme="light"] .record-header {
-    border-color: rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="light"] .record-time {
-    color: var(--color-primary-dark);
-}
-
-[data-theme="light"] .formula-display {
-    background: rgba(255, 255, 255, 0.95);
-    border-color: rgba(0, 0, 0, 0.15);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-[data-theme="light"] .formula {
-    color: var(--color-primary-dark);
-    font-weight: 600;
-}
-
-[data-theme="light"] .metronome-app {
-    background: transparent;
-}
-[data-theme="light"] .view-section,
-[data-theme="light"] .metronome-section {
-    background: transparent;
 }

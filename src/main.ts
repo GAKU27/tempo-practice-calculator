@@ -7,6 +7,8 @@
 export { DeviceIdentifier, getDeviceId, clearDeviceId } from './core/DeviceIdentifier';
 export { PrecisionTimer, getPrecisionTimer } from './core/PrecisionTimer';
 export { ActionLogger, logAction, logError, logWarn } from './core/ActionLogger';
+export { calculateTempoPracticeTime } from './core/Calculator';
+export { Metronome } from './core/Metronome';
 
 // UI modules
 export { TouchController, initTouchController } from './ui/TouchController';
@@ -22,6 +24,13 @@ import { ActionLogger } from './core/ActionLogger';
 import { TouchController } from './ui/TouchController';
 import { ThemeManager } from './ui/ThemeManager';
 import { DataManager } from './ui/DataManager';
+
+// New UI Controllers
+import { CalculatorUI } from './ui/CalculatorUI';
+import { MetronomeUI } from './ui/MetronomeUI';
+import { TimerUI } from './ui/TimerUI';
+import { PracticeRecordsUI } from './ui/PracticeRecordsUI';
+import { NavigationManager } from './ui/NavigationManager';
 
 /**
  * アプリケーション初期化
@@ -51,7 +60,24 @@ export function initializeApp(): void {
         DataManager.getInstance().initDeleteButton('delete-all-btn', 'delete-progress');
     }
 
-    console.log('[TPC] Tempo Practice Calculator initialized (TypeScript Edition)');
+    // 各UIの初期化
+    const calculatorUI = new CalculatorUI();
+    calculatorUI.init();
+
+    const metronomeUI = new MetronomeUI();
+    metronomeUI.init();
+
+    const timerUI = new TimerUI();
+    timerUI.init();
+
+    const practiceRecordsUI = new PracticeRecordsUI();
+    practiceRecordsUI.init();
+
+    const navManager = new NavigationManager();
+    navManager.init();
+    navManager.setMetronomeUI(metronomeUI);
+
+    console.log('[TPC] Tempo Practice Calculator initialized (TypeScript Edition Phase 6)');
 }
 
 // DOMContentLoaded時に自動初期化
