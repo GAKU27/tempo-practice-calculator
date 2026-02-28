@@ -1850,6 +1850,7 @@ body {
 
 [data-theme="light"] .timer-tab.active {
     background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: #ffffff;
 }
 
 [data-theme="light"] .countdown-input {
