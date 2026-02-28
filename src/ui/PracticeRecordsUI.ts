@@ -125,13 +125,15 @@ export class PracticeRecordsUI {
 
         if (this.saveBtn) {
             const originalText = this.saveBtn.innerHTML;
+            const originalBackground = this.saveBtn.style.background;
+
             this.saveBtn.innerHTML = '<span class="btn-icon">✅</span> 保存しました';
-            this.saveBtn.style.background = 'var(--color-tertiary)';
+            this.saveBtn.style.background = 'var(--color-primary)'; // 保存成功時はテーマに合わせたプライマリカラーに
 
             setTimeout(() => {
                 if (this.saveBtn) {
                     this.saveBtn.innerHTML = originalText;
-                    this.saveBtn.style.background = 'var(--gradient-primary)';
+                    this.saveBtn.style.background = originalBackground;
                 }
             }, 2000);
         }
