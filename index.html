@@ -12,7 +12,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="dist/styles/main.css">
+    <link rel="stylesheet" href="tempo-calculator.css">
 
     <!-- iOS Web App Settings -->
     <link rel="manifest" href="manifest.json">
@@ -68,13 +68,12 @@
                     </button>
                 </li>
                 <li>
-                    <button type="button" class="nav-item" data-target="practice-records-view">
-                        <span class="nav-icon">📋</span> 練習記録
-                    </button>
-                </li>
-                <li>
                     <button type="button" class="nav-item" data-target="settings-view">
                         <span class="nav-icon">⚙️</span> 全体設定
+                    </button>
+                <li>
+                    <button type="button" class="nav-item" data-target="records-view">
+                        <span class="nav-icon">📝</span> 練習記録
                     </button>
                 </li>
             </ul>
@@ -121,7 +120,6 @@
                                     <span class="hint">b: 最終到達テンポ</span>
                                 </div>
 
-
                             </div>
                         </div>
 
@@ -155,7 +153,6 @@
                                     <span class="hint">R: 各テンポでの繰り返し</span>
                                 </div>
 
-
                             </div>
                         </div>
 
@@ -186,7 +183,6 @@
                         </div>
 
 
-
                         <div class="result-card tertiary">
                             <div class="card-header">
                                 <span class="card-icon">🎯</span>
@@ -197,47 +193,25 @@
                         </div>
                     </div>
 
-                    <!-- Calculation Details -->
-                    <div class="calculation-details">
-                        <h3 class="details-title">計算詳細</h3>
-
-                        <div class="details-grid">
-                            <div class="detail-item">
-                                <span class="detail-label">厳密解（ループ計算）</span>
-                                <span class="detail-value" id="exactTime">-- 秒</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">近似解（S-P公式）</span>
-                                <span class="detail-value" id="approxTime">-- 秒</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">近似誤差率</span>
-                                <span class="detail-value" id="errorRate">--%</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">1ステップ総拍数 (K)</span>
-                                <span class="detail-value" id="totalBeatsPerStep">-- 拍</span>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Formula Display -->
                     <div class="formula-display">
                         <h3 class="formula-title">使用した数式</h3>
                         <div class="formula-box">
-                            <p class="formula">T<sub>total</sub> = N × Σ<sub>k=0</sub><sup>n</sup> (60 × B × R) / (a + s
-                                ×
-                                k)</p>
+                            <p class="formula">T<sub>total</sub> = Σ<sub>k=a</sub><sup>b</sup> (60 × B × R) / k</p>
                             <p class="formula-description">
-                                総所要時間 = セット数 × 各ステップの時間の総和
+                                総所要時間 = 各ステップ時間の総和<br>
+                                (a: 開始テンポ, b: 目標テンポ)
                             </p>
                         </div>
                     </div>
 
-                    <div class="action-buttons" style="margin-top: var(--space-lg); text-align: center;">
+                    <!-- 練習記録への保存 -->
+                    <div style="margin-top: 1.5rem; text-align: center;">
                         <button type="button" id="save-record-btn" class="calculate-btn"
-                            style="background: var(--gradient-primary);">
-                            <span class="btn-icon">💾</span> 練習記録に保存
+                            style="background: var(--color-tertiary); margin-bottom: 2rem;">
+                            <span class="btn-icon">💾</span>
+                            この計算結果を練習記録に保存
+                            <span class="btn-shine"></span>
                         </button>
                     </div>
                 </section>
@@ -252,13 +226,13 @@
                         <div class="info-item">
                             <div class="info-number">1</div>
                             <div class="info-text">
-                                <strong>テンポ設定</strong>で開始テンポ・終了テンポ・ステップ幅を入力
+                                <strong>テンポ設定</strong>で開始テンポ・終了テンポを選択
                             </div>
                         </div>
                         <div class="info-item">
                             <div class="info-number">2</div>
                             <div class="info-text">
-                                <strong>練習構造</strong>で拍子数・反復回数・セット数を設定
+                                <strong>練習構造</strong>で拍子数・反復回数を設定
                             </div>
                         </div>
                         <div class="info-item">
@@ -281,28 +255,14 @@
             </div> <!-- End Calculator View -->
 
             <!-- Practice Records View -->
-            <div id="practice-records-view" class="view-section hidden">
-                <section class="records-section glass-card">
-                    <div class="section-header"
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
-                        <h2 class="section-title" style="margin-bottom: 0;">
-                            <span class="title-icon">📋</span>
-                            練習記録
-                        </h2>
-                        <button type="button" id="clear-records-btn" class="control-btn small" title="記録をクリア"
-                            style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">
-                            🗑️
-                        </button>
-                    </div>
-
-                    <div id="records-list" class="records-list">
-                        <!-- Records will be injected here -->
-                        <div class="empty-state"
-                            style="text-align: center; padding: var(--space-xl); color: var(--color-text-muted);">
-                            <div style="font-size: 3rem; margin-bottom: var(--space-sm); opacity: 0.5;">📝</div>
-                            <p>記録がありません</p>
-                            <p style="font-size: var(--font-size-xs);">計算結果画面から「練習記録に保存」をクリックすると表示されます</p>
-                        </div>
+            <div id="records-view" class="view-section hidden">
+                <section class="glass-card">
+                    <h2 class="section-title">
+                        <span class="title-icon">📝</span>
+                        練習記録
+                    </h2>
+                    <div id="records-list-container" class="records-container">
+                        <!-- JSで動的に追加される -->
                     </div>
                 </section>
             </div>
@@ -376,10 +336,10 @@
                             <div class="setting-item">
                                 <label>音符</label>
                                 <select id="subdivision-select" class="setting-select">
-                                    <option value="1">♩ 4分</option>
-                                    <option value="2">♪ 8分</option>
-                                    <option value="3">3連符</option>
-                                    <option value="4">♬ 16分</option>
+                                    <option value="1">♩ 4分音符</option>
+                                    <option value="2">♪ 8分音符</option>
+                                    <option value="3">♪₃ 3連符</option>
+                                    <option value="4">♬ 16分音符</option>
                                 </select>
                             </div>
                         </div>
@@ -431,7 +391,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -567,7 +526,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('dist/sw.js')
+                navigator.serviceWorker.register('./service-worker.js')
                     .then((registration) => {
                         console.log('ServiceWorker registration successful with scope: ', registration.scope);
                     })
@@ -575,7 +534,7 @@
                         console.log('ServiceWorker registration failed: ', err);
                     });
             });
-        }
+    }
     </script>
 </body>
 

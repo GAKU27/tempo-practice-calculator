@@ -20,19 +20,13 @@ async function build() {
         // 1. Build TypeScript and SCSS using esbuild
         const context = await esbuild.context({
             entryPoints: [
-                'src/main.ts',
-                'src/styles/main.scss'
+                'src/main.ts'
             ],
             bundle: true,
             minify: !isDev,
             sourcemap: true,
             outdir: 'dist',
             target: 'es2020',
-            plugins: [sassPlugin({
-                type: 'css',
-                // For modern sass
-                logger: require('sass').Logger.silent,
-            })],
         });
 
         if (isDev) {
@@ -60,7 +54,8 @@ async function buildServiceWorker() {
             globDirectory: '.',
             globPatterns: [
                 'index.html',
-                'dist/**/*.{js,css}',
+                'dist/**/*.js',
+                'tempo-calculator.css',
                 'icon-*.png',
                 'manifest.json'
             ],
