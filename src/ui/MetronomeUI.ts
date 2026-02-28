@@ -220,9 +220,9 @@ export class MetronomeUI {
     }
 
     private setupSettingsModal() {
-        const settingsToggleBtn = document.getElementById('metronome-settings-toggle');
-        const settingsPanel = document.getElementById('metronome-settings-panel');
-        const closeSettingsBtn = document.getElementById('close-metronome-settings');
+        const settingsToggleBtn = document.getElementById('settings-toggle-btn');
+        const settingsPanel = document.getElementById('settings-panel');
+        const closeSettingsBtn = document.getElementById('close-settings-btn');
         const pendulumToggle = document.getElementById('pendulum-toggle') as HTMLInputElement;
         const pendulumContainer = document.getElementById('pendulum-container');
 
