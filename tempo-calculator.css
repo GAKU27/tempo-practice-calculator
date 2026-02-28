@@ -1843,9 +1843,10 @@ body {
 
 /* Light Theme Timer Styles */
 [data-theme="light"] .timer-tab {
-    background: rgba(0, 0, 0, 0.03);
+    background: #ffffff;
     border-color: #d1d5db;
-    color: #6b7280;
+    color: #374151;
+    font-weight: 600;
 }
 
 [data-theme="light"] .timer-tab.active {
