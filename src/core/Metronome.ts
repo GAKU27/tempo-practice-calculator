@@ -1,9 +1,12 @@
 /**
  * Metronome - Web Audio API エンジン
  */
+import { WakeLock } from './WakeLock';
+
 export class Metronome {
     private audioContext: AudioContext | null = null;
     public isPlaying: boolean = false;
+    private wakeLock: WakeLock;
 
     private currentBeatInBar: number = 0;
     private currentSubdivision: number = 0;
@@ -27,6 +30,7 @@ export class Metronome {
     private pendulumCallback: ((direction: 'left' | 'right') => void) | null = null;
 
     constructor() {
+        this.wakeLock = WakeLock.getInstance();
     }
 
     setVisualCallback(callback: (beatNumber: number, isMainBeat: boolean, isAccent: boolean) => void) {
@@ -210,6 +214,7 @@ export class Metronome {
     private _startPlayback() {
         if (!this.audioContext) return;
         this.isPlaying = true;
+        this.wakeLock.requestWakeLock();
         this.currentBeatInBar = 0;
         this.currentSubdivision = 0;
         this.nextNoteTime = this.audioContext.currentTime + 0.1;
@@ -218,6 +223,7 @@ export class Metronome {
 
     public stop() {
         this.isPlaying = false;
+        this.wakeLock.releaseWakeLock();
         if (this.timerID !== null) {
             clearTimeout(this.timerID);
             this.timerID = null;

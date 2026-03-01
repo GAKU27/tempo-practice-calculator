@@ -1,3 +1,5 @@
+import { WakeLock } from '../core/WakeLock';
+
 export class TimerUI {
     private timerInterval: number | null = null;
     private elapsedTime: number = 0; // milliseconds
@@ -6,6 +8,7 @@ export class TimerUI {
     private countdownTarget: number = 0;
     private laps: { time: number, diff: number }[] = [];
     private lastLapTime: number = 0;
+    private wakeLock: WakeLock;
 
     // UI Elements
     private timerDisplay: HTMLElement | null = null;
@@ -19,7 +22,9 @@ export class TimerUI {
     private countdownMinutes: HTMLInputElement | null = null;
     private countdownSeconds: HTMLInputElement | null = null;
 
-    constructor() { }
+    constructor() {
+        this.wakeLock = WakeLock.getInstance();
+    }
 
     public init() {
         this.timerDisplay = document.getElementById('timer-display');
@@ -118,6 +123,7 @@ export class TimerUI {
         }
 
         this.isRunning = true;
+        this.wakeLock.requestWakeLock();
         const startTime = Date.now() - this.elapsedTime;
 
         this.timerInterval = window.setInterval(() => {
@@ -135,6 +141,7 @@ export class TimerUI {
         if (!this.isRunning) return;
 
         this.isRunning = false;
+        this.wakeLock.releaseWakeLock();
         if (this.timerInterval !== null) {
             clearInterval(this.timerInterval);
             this.timerInterval = null;
