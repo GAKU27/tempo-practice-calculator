@@ -2366,6 +2366,22 @@ textarea,
     padding-right: 0;
 }
 
+[data-theme="light"] .tab-item {
+    color: #6b7280;
+}
+
+[data-theme="light"] .tab-item:hover,
+[data-theme="light"] .tab-item.active {
+    color: var(--color-primary-dark);
+    background: rgba(16, 185, 129, 0.05);
+}
+
+[data-theme="light"] .tab-item.active .nav-svg {
+    stroke-width: 2.2px;
+    stroke: var(--color-primary-dark);
+    fill: rgba(16, 185, 129, 0.15);
+}
+
 [data-theme="light"] .input-wrapper input {
     background: rgba(255, 255, 255, 0.9);
     border-color: rgba(0, 0, 0, 0.15);
@@ -2519,6 +2535,7 @@ textarea,
 [data-theme="light"] .metronome-section {
     background: transparent;
 }
+
 
 
 
