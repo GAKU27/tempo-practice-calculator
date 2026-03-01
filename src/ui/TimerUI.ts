@@ -62,6 +62,10 @@ export class TimerUI {
             });
         });
 
+        // Initialize display buttons
+        if (this.startBtn) this.startBtn.classList.remove('hidden');
+        if (this.stopBtn) this.stopBtn.classList.add('hidden');
+
         this.updateDisplay();
     }
 
@@ -131,8 +135,8 @@ export class TimerUI {
             this.updateDisplay();
         }, 10);
 
-        if (this.startBtn) this.startBtn.disabled = true;
-        if (this.stopBtn) this.stopBtn.disabled = false;
+        if (this.startBtn) this.startBtn.classList.add('hidden');
+        if (this.stopBtn) this.stopBtn.classList.remove('hidden');
         if (this.lapBtn) this.lapBtn.disabled = false;
         if (this.timerDisplay) this.timerDisplay.style.color = '';
     }
@@ -147,8 +151,8 @@ export class TimerUI {
             this.timerInterval = null;
         }
 
-        if (this.startBtn) this.startBtn.disabled = false;
-        if (this.stopBtn) this.stopBtn.disabled = true;
+        if (this.startBtn) this.startBtn.classList.remove('hidden');
+        if (this.stopBtn) this.stopBtn.classList.add('hidden');
     }
 
     private resetTimer() {

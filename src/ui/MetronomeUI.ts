@@ -72,8 +72,23 @@ export class MetronomeUI {
 
         if (timeSignatureSelect) {
             this.metronome.setBeatsPerBar(parseInt(timeSignatureSelect.value, 10));
+            // Update display text on load
+            const timeSignatureDisplay = timeSignatureSelect.nextElementSibling;
+            if (timeSignatureDisplay && timeSignatureDisplay.classList.contains('setting-value-display')) {
+                const selectedOption = timeSignatureSelect.options[timeSignatureSelect.selectedIndex];
+                timeSignatureDisplay.textContent = selectedOption.text;
+            }
+
             timeSignatureSelect.addEventListener('change', (e) => {
-                this.metronome.setBeatsPerBar(parseInt((e.target as HTMLSelectElement).value, 10));
+                const selectElement = e.target as HTMLSelectElement;
+                this.metronome.setBeatsPerBar(parseInt(selectElement.value, 10));
+
+                // Update display text
+                const display = selectElement.nextElementSibling;
+                if (display && display.classList.contains('setting-value-display')) {
+                    const option = selectElement.options[selectElement.selectedIndex];
+                    display.textContent = option.text;
+                }
             });
         }
 
@@ -226,13 +241,26 @@ export class MetronomeUI {
         const pendulumToggle = document.getElementById('pendulum-toggle') as HTMLInputElement;
         const pendulumContainer = document.getElementById('pendulum-container');
 
-        if (settingsToggleBtn && settingsPanel && closeSettingsBtn) {
+        if (settingsToggleBtn && settingsPanel) {
             const togglePanel = () => {
                 settingsPanel.classList.toggle('hidden');
             };
 
             settingsToggleBtn.addEventListener('click', togglePanel);
-            closeSettingsBtn.addEventListener('click', togglePanel);
+
+            if (closeSettingsBtn) {
+                closeSettingsBtn.addEventListener('click', togglePanel);
+            }
+
+            // Click outside to close (Optional but good for Bottom Sheet)
+            document.addEventListener('click', (e) => {
+                if (!settingsPanel.classList.contains('hidden')) {
+                    const target = e.target as Node;
+                    if (!settingsPanel.contains(target) && !settingsToggleBtn.contains(target)) {
+                        settingsPanel.classList.add('hidden');
+                    }
+                }
+            });
         }
 
         if (pendulumToggle && pendulumContainer) {

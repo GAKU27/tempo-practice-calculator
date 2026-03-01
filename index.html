@@ -238,70 +238,70 @@
 
             <!-- Metronome View -->
             <div id="metronome-view" class="view-section hidden">
-                <section class="metronome-section glass-card">
-                    <div class="metronome-app">
-                        <!-- BPM Display -->
-                        <div class="bpm-display-area">
-                            <span class="bpm-label">TEMPO</span>
-                            <h1 id="bpm-display" class="bpm-value">120</h1>
-                            <p class="bpm-text">Allegro</p>
-                        </div>
-
-                        <!-- Visualization Circle -->
-                        <div class="metronome-visual">
-                            <div id="visual-circle" class="visual-circle"></div>
-                        </div>
-
-                        <!-- Controls -->
-                        <div class="metronome-controls">
-                            <button type="button" id="bpm-decrease" class="control-btn small">-</button>
-                            <input type="range" id="bpm-slider" min="30" max="250" value="120" class="bpm-slider">
-                            <button type="button" id="bpm-increase" class="control-btn small">+</button>
-                        </div>
-
-                        <div class="play-controls">
-                            <button type="button" id="metronome-play-btn" class="play-btn">
-                                <span class="btn-icon">▶</span>
-                            </button>
-                        </div>
-
-                        <!-- iPhone注意書き -->
-                        <p class="sound-notice">📱 iPhoneの場合、消音モード（マナーモード）を解除してください</p>
-
-                        <!-- Pendulum -->
+                <section class="metronome-section fullscreen-layout">
+                    <!-- Visualization & Pendulum Area (Top) -->
+                    <div class="metronome-visual-area">
                         <div class="pendulum-container">
                             <div class="pendulum-arm" id="pendulum-arm">
                                 <div class="pendulum-weight" id="pendulum-weight"></div>
                             </div>
                             <div class="pendulum-base"></div>
                         </div>
+                        <div id="visual-circle" class="visual-circle"></div>
+                    </div>
 
-                        <!-- Quick Settings (常時表示) -->
-                        <div class="quick-settings">
-                            <div class="setting-item">
-                                <label>拍子</label>
-                                <select id="time-signature-select" class="setting-select">
-                                    <optgroup label="4分音符系">
-                                        <option value="1-4">1 / 4</option>
-                                        <option value="2-4">2 / 4</option>
-                                        <option value="3-4">3 / 4</option>
-                                        <option value="4-4" selected>4 / 4</option>
-                                        <option value="5-4">5 / 4</option>
-                                        <option value="6-4">6 / 4</option>
-                                    </optgroup>
-                                    <optgroup label="8分音符系">
-                                        <option value="3-8">3 / 8</option>
-                                        <option value="5-8">5 / 8</option>
-                                        <option value="6-8">6 / 8</option>
-                                        <option value="7-8">7 / 8</option>
-                                        <option value="9-8">9 / 8</option>
-                                        <option value="12-8">12 / 8</option>
-                                    </optgroup>
-                                    <optgroup label="その他">
-                                        <option value="0">なし（アクセントなし）</option>
-                                    </optgroup>
-                                </select>
-                            </div>
+                    <!-- Main Display & Controls (Center) -->
+                    <div class="metronome-main-area">
+                        <p id="tempo-text" class="bpm-text">Allegro</p>
+                        <div class="bpm-controls-row">
+                            <button type="button" id="bpm-decrease" class="circle-btn">-</button>
+                            <h1 id="bpm-display" class="massive-bpm">120</h1>
+                            <button type="button" id="bpm-increase" class="circle-btn">+</button>
+                        </div>
+                        <input type="range" id="bpm-slider" min="30" max="250" value="120" class="bpm-slider hidden"
+                            style="display:none;">
+                    </div>
+
+                    <!-- Quick Settings Row (Bottom-Middle) -->
+                    <div class="quick-settings-row">
+                        <div class="compact-setting">
+                            <select id="time-signature-select" class="invisible-select">
+                                <option value="1-4">1/4</option>
+                                <option value="2-4">2/4</option>
+                                <option value="3-4">3/4</option>
+                                <option value="4-4" selected>4/4</option>
+                                <option value="5-4">5/4</option>
+                                <option value="6-4">6/4</option>
+                                <option value="3-8">3/8</option>
+                                <option value="6-8">6/8</option>
+                                <option value="9-8">9/8</option>
+                                <option value="12-8">12/8</option>
+                                <option value="0">0</option>
+                            </select>
+                            <span class="setting-value-display">4/4</span>
+                        </div>
+                        <button type="button" id="settings-toggle-btn" class="icon-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Massive Play Button (Bottom) -->
+                    <div class="massive-action-area">
+                        <button type="button" id="metronome-play-btn" class="massive-play-btn">START</button>
+                    </div>
+
+                    <!-- Bottom Sheet Settings (Hidden) -->
+                    <div id="settings-panel" class="bottom-sheet hidden">
+                        <div class="bottom-sheet-header">
+                            <h3>設定</h3>
+                            <button type="button" id="close-settings-btn" class="close-sheet-btn">×</button>
+                        </div>
+                        <div class="bottom-sheet-content">
                             <div class="setting-item">
                                 <label>音符</label>
                                 <select id="subdivision-select" class="setting-select">
@@ -311,55 +311,18 @@
                                     <option value="4">♬ 16分音符</option>
                                 </select>
                             </div>
-                        </div>
-
-                        <!-- Settings Button -->
-                        <button type="button" id="settings-toggle-btn" class="settings-toggle-btn">
-                            <span class="settings-icon">⚙</span>
-                            <span>詳細設定</span>
-                        </button>
-
-                        <!-- Settings Panel (折りたたみ) -->
-                        <div id="settings-panel" class="settings-panel hidden">
-                            <div class="settings-panel-header">
-                                <h3>詳細設定</h3>
-                                <button type="button" id="close-settings-btn" class="close-settings-btn">×</button>
+                            <div class="setting-item">
+                                <label>音色</label>
+                                <select id="sound-type-select" class="setting-select">
+                                    <option value="click">クリック</option>
+                                    <option value="wood">ウッドブロック</option>
+                                    <option value="beep">ビープ</option>
+                                </select>
                             </div>
-                            <div class="settings-panel-content">
-                                <div class="setting-group">
-                                    <h4>サウンド</h4>
-                                    <div class="setting-item">
-                                        <label>音色</label>
-                                        <select id="sound-type-select" class="setting-select">
-                                            <option value="click">クリック</option>
-                                            <option value="wood">ウッドブロック</option>
-                                            <option value="beep">ビープ</option>
-                                        </select>
-                                    </div>
-                                    <div class="setting-item">
-                                        <label>音量 <span id="volume-value">80</span>%</label>
-                                        <input type="range" id="volume-slider" min="0" max="100" value="80"
-                                            class="volume-slider">
-                                    </div>
-                                </div>
-                                <div class="setting-group">
-                                    <h4>振り子</h4>
-                                    <div class="setting-item">
-                                        <label>表示</label>
-                                        <select id="pendulum-select" class="setting-select">
-                                            <option value="on">表示</option>
-                                            <option value="off">非表示</option>
-                                        </select>
-                                    </div>
-                                    <div class="setting-item">
-                                        <label>玉の色</label>
-                                        <div class="color-picker-row">
-                                            <input type="color" id="pendulum-color" value="#8b5cf6"
-                                                class="color-picker">
-                                            <span id="pendulum-color-label" class="color-label">#8b5cf6</span>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="setting-item">
+                                <label>音量 <span id="volume-value">80</span>%</label>
+                                <input type="range" id="volume-slider" min="0" max="100" value="80"
+                                    class="volume-slider">
                             </div>
                         </div>
                     </div>
@@ -367,65 +330,48 @@
             </div>
 
             <!-- Timer View -->
-            <div id="timer-view" class="view-section">
-                <section class="timer-section glass-card">
-                    <h2 class="section-title">
-                        <span class="title-icon">⏳</span>
-                        タイマー / ストップウォッチ
-                    </h2>
-
-                    <!-- Mode Tabs -->
-                    <div class="timer-tabs">
-                        <button type="button" class="timer-tab active" data-mode="stopwatch">ストップウォッチ</button>
-                        <button type="button" class="timer-tab" data-mode="countdown">カウントダウン</button>
+            <div id="timer-view" class="view-section hidden">
+                <section class="timer-section fullscreen-layout">
+                    <!-- Mode Selector (Top) -->
+                    <div class="timer-tabs top-nav">
+                        <button type="button" class="timer-tab active" data-mode="stopwatch">Stopwatch</button>
+                        <button type="button" class="timer-tab" data-mode="countdown">Timer</button>
                     </div>
 
-                    <!-- Timer Display -->
-                    <div class="timer-display-container">
-                        <div class="timer-display" id="timer-display">00:00:00</div>
-                        <div class="timer-ms" id="timer-ms">.00</div>
-                    </div>
+                    <!-- Main Display (Center) -->
+                    <div class="timer-main-area">
+                        <div class="massive-timer-display" id="timer-display">00:00:00</div>
+                        <div class="massive-timer-ms" id="timer-ms">.00</div>
 
-                    <!-- Countdown Settings (hidden by default) -->
-                    <div id="countdown-settings" class="countdown-settings hidden">
-                        <div class="countdown-inputs">
-                            <div class="countdown-input-group">
-                                <input type="number" id="countdown-minutes" value="5" min="0" max="99"
-                                    class="countdown-input">
-                                <label>分</label>
-                            </div>
-                            <span class="countdown-separator">:</span>
-                            <div class="countdown-input-group">
-                                <input type="number" id="countdown-seconds" value="0" min="0" max="59"
-                                    class="countdown-input">
-                                <label>秒</label>
+                        <!-- Countdown Settings -->
+                        <div id="countdown-settings" class="countdown-settings hidden">
+                            <div class="countdown-inputs">
+                                <div class="countdown-input-group">
+                                    <input type="number" id="countdown-minutes" value="5" min="0" max="99"
+                                        class="countdown-input">
+                                    <label>m</label>
+                                </div>
+                                <div class="countdown-input-group">
+                                    <input type="number" id="countdown-seconds" value="0" min="0" max="59"
+                                        class="countdown-input">
+                                    <label>s</label>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Timer Controls -->
-                    <div class="timer-controls">
-                        <button type="button" id="timer-start-btn" class="timer-btn primary">
-                            <span class="btn-icon">▶</span>
-                            スタート
+                    <!-- Controls (Bottom) -->
+                    <div class="timer-action-area">
+                        <button type="button" id="timer-reset-btn" class="circle-btn small-circle">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polyline points="1 4 1 10 7 10"></polyline>
+                                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                            </svg>
                         </button>
-                        <button type="button" id="timer-stop-btn" class="timer-btn secondary" disabled>
-                            <span class="btn-icon">❚❚</span>
-                            ストップ
-                        </button>
-                        <button type="button" id="timer-reset-btn" class="timer-btn tertiary">
-                            <span class="btn-icon">↺</span>
-                            リセット
-                        </button>
-                    </div>
-
-                    <!-- Lap Times -->
-                    <div class="lap-section">
-                        <div class="lap-header">
-                            <h3>ラップタイム</h3>
-                            <button type="button" id="lap-btn" class="lap-record-btn" disabled>記録</button>
-                        </div>
-                        <ul id="lap-list" class="lap-list"></ul>
+                        <button type="button" id="timer-start-btn" class="massive-play-btn">START</button>
+                        <button type="button" id="timer-stop-btn" class="massive-play-btn stop-btn hidden">STOP</button>
                     </div>
                 </section>
             </div>
