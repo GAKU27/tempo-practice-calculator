@@ -2305,7 +2305,7 @@ textarea,
 }
 
 [data-theme="light"] .pendulum-container {
-    background: rgba(0, 0, 0, 0.02);
+    background: transparent;
 }
 
 /* ========================================
