@@ -97,9 +97,9 @@ export class Metronome {
         const osc = this.audioContext.createOscillator();
         const envelope = this.audioContext.createGain();
 
-        osc.frequency.value = isAccent ? 880.0 : 440.0;
+        osc.frequency.value = isAccent ? 1600.0 : 800.0;
 
-        const baseVolume = isMainBeat ? 1.0 : 0.5;
+        const baseVolume = isAccent ? 1.4 : (isMainBeat ? 0.9 : 0.4);
         envelope.gain.setValueAtTime(baseVolume * this.volume, time);
         envelope.gain.exponentialRampToValueAtTime(0.001, time + 0.02);
 
@@ -112,17 +112,17 @@ export class Metronome {
 
     private playWoodSound(time: number, isAccent: boolean, isMainBeat: boolean) {
         if (!this.audioContext) return;
-        const baseVolume = isMainBeat ? 1.0 : 0.5;
+        const baseVolume = isAccent ? 1.5 : (isMainBeat ? 0.9 : 0.4);
 
         // メイン音
         const osc = this.audioContext.createOscillator();
         const envelope = this.audioContext.createGain();
 
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(isAccent ? 1500 : 1200, time);
-        osc.frequency.exponentialRampToValueAtTime(isAccent ? 600 : 400, time + 0.015);
+        osc.frequency.setValueAtTime(isAccent ? 1600 : 800, time);
+        osc.frequency.exponentialRampToValueAtTime(isAccent ? 600 : 200, time + 0.015);
 
-        envelope.gain.setValueAtTime((isAccent ? 0.6 : 0.4) * baseVolume * this.volume, time);
+        envelope.gain.setValueAtTime((isAccent ? 0.8 : 0.4) * baseVolume * this.volume, time);
         envelope.gain.exponentialRampToValueAtTime(0.001, time + 0.04);
 
         osc.connect(envelope);
@@ -136,9 +136,9 @@ export class Metronome {
         const clickEnv = this.audioContext.createGain();
 
         click.type = 'square';
-        click.frequency.value = isAccent ? 2000 : 1600;
+        click.frequency.value = isAccent ? 2400 : 1600;
 
-        clickEnv.gain.setValueAtTime((isAccent ? 0.3 : 0.2) * baseVolume * this.volume, time);
+        clickEnv.gain.setValueAtTime((isAccent ? 0.4 : 0.2) * baseVolume * this.volume, time);
         clickEnv.gain.exponentialRampToValueAtTime(0.001, time + 0.01);
 
         click.connect(clickEnv);
@@ -154,9 +154,10 @@ export class Metronome {
         const envelope = this.audioContext.createGain();
 
         osc.type = 'sine';
-        osc.frequency.value = isAccent ? 1000.0 : 800.0;
+        // ピープ音は少し電子的な音
+        osc.frequency.value = isAccent ? 1200.0 : 600.0;
 
-        const baseVolume = isMainBeat ? 1.0 : 0.5;
+        const baseVolume = isAccent ? 1.5 : (isMainBeat ? 0.8 : 0.4);
         envelope.gain.setValueAtTime(0.5 * baseVolume * this.volume, time);
         envelope.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
 

@@ -22,7 +22,7 @@ export class MetronomeUI {
         const tapBtn = document.getElementById('tap-tempo-btn');
         const timeSignatureSelect = document.getElementById('time-signature-select') as HTMLSelectElement;
         const subdivisionSelect = document.getElementById('subdivision-select') as HTMLSelectElement;
-        const soundSelect = document.getElementById('sound-select') as HTMLSelectElement;
+        const soundSelect = document.getElementById('sound-type-select') as HTMLSelectElement;
         const volumeSlider = document.getElementById('volume-slider') as HTMLInputElement;
         const pendulumToggle = document.getElementById('pendulum-toggle') as HTMLInputElement;
 
