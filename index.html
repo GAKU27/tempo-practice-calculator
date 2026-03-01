@@ -33,13 +33,8 @@
 
 <body>
     <div class="app-container">
-        <!-- Header -->
         <header class="header">
             <div class="header-content">
-                <button type="button" id="menu-btn" class="icon-btn" title="メニュー" aria-label="メニューを開く"
-                    aria-expanded="false" aria-controls="nav-menu">
-                    <span class="menu-icon" aria-hidden="true">≡</span>
-                </button>
                 <div class="logo">
                     <div class="logo-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -52,41 +47,6 @@
                 <p class="tagline">練習時間計算機</p>
             </div>
         </header>
-
-        <!-- Navigation Menu (Side Drawer) -->
-        <div id="nav-overlay" class="nav-overlay"></div>
-        <nav id="nav-menu" class="nav-menu" role="navigation" aria-label="メインナビゲーション">
-            <div class="nav-header">
-                <h2>Menu</h2>
-                <button type="button" id="close-menu-btn" class="icon-btn">×</button>
-            </div>
-            <ul class="nav-list">
-                <li>
-                    <button type="button" class="nav-item active" data-target="calculator-view">
-                        <span class="nav-icon">🔢</span> 練習時間計算
-                    </button>
-                </li>
-                <li>
-                    <button type="button" class="nav-item" data-target="metronome-view">
-                        <span class="nav-icon">⏱️</span> メトロノーム
-                    </button>
-                </li>
-                <li>
-                    <button type="button" class="nav-item" data-target="timer-view">
-                        <span class="nav-icon">⏳</span> タイマー
-                    </button>
-                </li>
-                <li>
-                    <button type="button" class="nav-item" data-target="settings-view">
-                        <span class="nav-icon">⚙️</span> 全体設定
-                    </button>
-                <li>
-                    <button type="button" class="nav-item" data-target="records-view">
-                        <span class="nav-icon">📝</span> 練習記録
-                    </button>
-                </li>
-            </ul>
-        </nav>
 
         <!-- Main Content Area -->
         <main class="main-content" role="main">
@@ -522,6 +482,30 @@
                 数理モデル: 拡張有理S-P公式
             </p>
         </footer>
+
+        <!-- Bottom Tab Navigation -->
+        <nav id="nav-menu" class="bottom-tab-bar" role="navigation" aria-label="メインナビゲーション">
+            <button type="button" class="tab-item active" data-target="calculator-view" aria-label="計算機">
+                <span class="tab-icon">🔢</span>
+                <span class="tab-label">計算</span>
+            </button>
+            <button type="button" class="tab-item" data-target="metronome-view" aria-label="メトロノーム">
+                <span class="tab-icon">⏱️</span>
+                <span class="tab-label">メトロ</span>
+            </button>
+            <button type="button" class="tab-item" data-target="timer-view" aria-label="タイマー">
+                <span class="tab-icon">⏳</span>
+                <span class="tab-label">タイマー</span>
+            </button>
+            <button type="button" class="tab-item" data-target="records-view" aria-label="練習記録">
+                <span class="tab-icon">📝</span>
+                <span class="tab-label">記録</span>
+            </button>
+            <button type="button" class="tab-item" data-target="settings-view" aria-label="全体設定">
+                <span class="tab-icon">⚙️</span>
+                <span class="tab-label">設定</span>
+            </button>
+        </nav>
     </div>
 
     <!-- Background Animation -->
