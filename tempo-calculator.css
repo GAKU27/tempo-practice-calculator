@@ -2187,7 +2187,7 @@ textarea,
     gap: 3px;
     background: transparent;
     border: none;
-    color: var(--color-text-muted);
+    color: var(--color-text-secondary);
     padding: 6px 0;
     margin: 0;
     cursor: pointer;
@@ -2220,12 +2220,13 @@ textarea,
 
 .tab-item:hover,
 .tab-item.active {
-    color: var(--color-primary);
+    color: var(--color-primary-light);
+    background: transparent;
 }
 
 .tab-item.active .nav-svg {
     stroke-width: 2.2px;
-    stroke: var(--color-primary);
+    stroke: var(--color-primary-light);
 }
 
 /* ========================================
@@ -2353,7 +2354,7 @@ textarea,
     width: 100%;
     height: calc(65px + env(safe-area-inset-bottom, 0px));
     padding-bottom: env(safe-area-inset-bottom, 0px);
-    background: rgba(15, 23, 42, 0.85);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-top: 1px solid var(--color-border);
@@ -2367,19 +2368,19 @@ textarea,
 }
 
 [data-theme="light"] .tab-item {
-    color: #6b7280;
+    color: #4b5563;
 }
 
 [data-theme="light"] .tab-item:hover,
+[data-theme="light"] .tab-item:hover,
 [data-theme="light"] .tab-item.active {
-    color: var(--color-primary-dark);
-    background: rgba(16, 185, 129, 0.05);
+    color: var(--color-primary);
+    background: transparent;
 }
 
 [data-theme="light"] .tab-item.active .nav-svg {
     stroke-width: 2.2px;
     stroke: var(--color-primary-dark);
-    fill: rgba(16, 185, 129, 0.15);
 }
 
 [data-theme="light"] .input-wrapper input {
@@ -2456,7 +2457,7 @@ textarea,
 
 .record-date {
     font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
+    color: var(--color-text-secondary);
 }
 
 .record-time {
@@ -2535,6 +2536,12 @@ textarea,
 [data-theme="light"] .metronome-section {
     background: transparent;
 }
+
+
+
+
+
+
 
 
 
