@@ -39,7 +39,8 @@
 
     /* Typography */
     --font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-family-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Consolas', monospace;
+    --font-family-mono: var(--font-family);
+    /* Use sans-serif but with tabular-nums for numbers */
     --font-size-xs: 0.75rem;
     --font-size-sm: 0.875rem;
     --font-size-base: 1rem;
