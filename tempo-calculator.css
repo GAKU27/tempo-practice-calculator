@@ -2178,6 +2178,56 @@ textarea,
     padding-right: 0;
 }
 
+.tab-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: transparent;
+    border: none;
+    color: var(--color-text-muted);
+    padding: 6px 0;
+    margin: 0;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+    border-radius: 0;
+}
+
+.tab-icon {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2px;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nav-svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 1.5px;
+    transition: all 0.2s ease;
+}
+
+.tab-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+}
+
+.tab-item:hover,
+.tab-item.active {
+    color: var(--color-primary);
+}
+
+.tab-item.active .nav-svg {
+    stroke-width: 2.2px;
+    stroke: var(--color-primary);
+}
+
 /* ========================================
    Device Info & Danger Zone
    ======================================== */
@@ -2469,6 +2519,10 @@ textarea,
 [data-theme="light"] .metronome-section {
     background: transparent;
 }
+
+
+
+
 
 
 
