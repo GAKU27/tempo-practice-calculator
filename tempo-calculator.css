@@ -2607,7 +2607,7 @@ textarea,
 }
 
 .massive-bpm {
-    font-size: 9rem;
+    font-size: clamp(5rem, 22vw, 9rem);
     font-weight: 300;
     font-family: var(--font-family-mono);
     color: var(--color-text-primary);
