@@ -28,7 +28,7 @@ export class NavigationManager {
             this.tabItems.forEach(item => {
                 if (item.classList.contains('active')) {
                     const targetId = item.getAttribute('data-target');
-                    if (targetId === 'metronome-view' || targetId === 'timer-view') {
+                    if (targetId === 'metronome-view' || targetId === 'timer-view' || targetId === 'settings-view') {
                         document.body.style.overflow = 'hidden';
                         document.body.classList.add('fullscreen-mode');
                     }
@@ -40,7 +40,7 @@ export class NavigationManager {
                     const targetId = item.getAttribute('data-target');
 
                     // Manage scrolling state
-                    if (targetId === 'metronome-view' || targetId === 'timer-view') {
+                    if (targetId === 'metronome-view' || targetId === 'timer-view' || targetId === 'settings-view') {
                         document.body.style.overflow = 'hidden';
                         document.body.classList.add('fullscreen-mode');
                     } else {

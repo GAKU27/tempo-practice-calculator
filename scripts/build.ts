@@ -1,9 +1,10 @@
-// scripts/build.js
-const esbuild = require('esbuild');
-const { sassPlugin } = require('esbuild-sass-plugin');
-const { generateSW } = require('workbox-build');
-const fs = require('fs');
-const path = require('path');
+// scripts/build.ts
+import * as esbuild from 'esbuild';
+import { sassPlugin } from 'esbuild-sass-plugin';
+// @ts-ignore - workbox lacks types
+import { generateSW } from 'workbox-build';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const isDev = process.argv.includes('--dev');
 
@@ -79,7 +80,7 @@ async function buildServiceWorker() {
             clientsClaim: true,
         });
 
-        warnings.forEach((warning) => console.warn(`[Workbox Warning]: ${warning}`));
+        warnings.forEach((warning: any) => console.warn(`[Workbox Warning]: ${warning}`));
         console.log(`✅ Service worker generated! Precaching ${count} files, totaling ${(size / 1024 / 1024).toFixed(2)} MB.`);
     } catch (err) {
         console.error('Service Worker generation failed:', err);
